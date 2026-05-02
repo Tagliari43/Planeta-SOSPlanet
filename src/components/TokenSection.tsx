@@ -1,30 +1,38 @@
 import { CircleDollarSign, ShieldCheck, Globe, RefreshCw } from 'lucide-react';
 import { Logo } from './Logo';
 import { motion } from 'motion/react';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 interface TokenSectionProps {
   onOpenModal?: () => void;
 }
 
+const tokenomicsData = [
+  { name: 'Reflorestamento', value: 40, color: '#16a34a' }, // green-600
+  { name: 'Projetos Sociais', value: 30, color: '#22c55e' }, // green-500
+  { name: 'Liquidez/Ecossistema', value: 20, color: '#d97706' }, // amber-600 (earthy)
+  { name: 'Inovação', value: 10, color: '#ca8a04' }, // yellow-600 (gold)
+];
+
 export function TokenSection({ onOpenModal }: TokenSectionProps) {
   const tokenFeatures = [
     {
-      icon: <CircleDollarSign className="w-5 h-5 text-green-600" />,
+      icon: <CircleDollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />,
       title: 'Valor com Propósito',
       description: 'O SOS Token não é apenas um investimento financeiro, mas um investimento no futuro do nosso planeta.'
     },
     {
-      icon: <ShieldCheck className="w-5 h-5 text-green-600" />,
+      icon: <ShieldCheck className="w-5 h-5 text-green-600 dark:text-green-400" />,
       title: 'Segurança Blockchain',
       description: 'Todas as transações são seguras e transparentes, garantindo que o impacto possa ser verificado.'
     },
     {
-      icon: <Globe className="w-5 h-5 text-green-600" />,
+      icon: <Globe className="w-5 h-5 text-green-600 dark:text-green-400" />,
       title: 'Impacto Global',
       description: 'Começando pela Amazônia, nossa visão se expande para ecossistemas em todo o mundo.'
     },
     {
-      icon: <RefreshCw className="w-5 h-5 text-green-600" />,
+      icon: <RefreshCw className="w-5 h-5 text-green-600 dark:text-green-400" />,
       title: 'Economia Circular',
       description: 'Criamos um ecossistema econômico onde o valor gerado retorna para causas ambientais e sociais.'
     }
@@ -50,7 +58,7 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
   };
 
   return (
-    <section id="token" className="py-24 px-6 bg-white overflow-hidden">
+    <section id="token" className="py-24 px-6 bg-white dark:bg-[#0b1410] overflow-hidden transition-colors">
       <div className="max-w-6xl mx-auto">
         
         <motion.div 
@@ -60,8 +68,8 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-green-800 tracking-tight mb-6">O token SOS</h2>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-bold text-green-800 dark:text-green-400 tracking-tight mb-6">O token SOS</h2>
+          <p className="text-xl text-gray-600 dark:text-green-100/80 max-w-4xl mx-auto leading-relaxed">
             Nossa criptomoeda foi projetada com um propósito: financiar a mudança que queremos ver no mundo. Cada token representa um compromisso com nosso planeta e seu futuro.
           </p>
         </motion.div>
@@ -81,15 +89,15 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
                 key={idx} 
                 variants={itemVariants}
                 whileHover={{ scale: 1.03, y: -5 }}
-                className="bg-green-50/50 border border-green-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all cursor-default"
+                className="bg-green-50/50 dark:bg-green-900/10 border border-green-100 dark:border-green-800/30 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all cursor-default"
               >
-                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-4 border border-green-100 text-green-600">
+                <div className="w-10 h-10 rounded-full bg-white dark:bg-[#111f18] flex items-center justify-center shadow-sm mb-4 border border-green-100 dark:border-green-800/50 text-green-600 dark:text-green-400">
                   <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.4 }}>
                     {feat.icon}
                   </motion.div>
                 </div>
-                <h4 className="text-lg font-semibold text-gray-800 mb-2">{feat.title}</h4>
-                <p className="text-gray-600 text-sm leading-relaxed">{feat.description}</p>
+                <h4 className="text-lg font-semibold text-gray-800 dark:text-green-200 mb-2">{feat.title}</h4>
+                <p className="text-gray-600 dark:text-green-100/60 text-sm leading-relaxed">{feat.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -100,47 +108,47 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex-[1.2] border-2 border-green-500 rounded-2xl p-8 md:p-10 shadow-lg bg-white relative hover:shadow-xl transition-shadow"
+            className="flex-[1.2] border-2 border-green-500 dark:border-green-600/50 rounded-2xl p-8 md:p-10 shadow-lg bg-white dark:bg-[#0b1410] relative hover:shadow-xl transition-shadow"
           >
             <div className="flex justify-center mb-8">
               <Logo size="lg" className="shadow-md" />
             </div>
 
             <div className="space-y-4">
-              <div className="flex justify-between items-center py-4 border-b border-gray-100">
-                <span className="text-gray-600 font-medium">Nome do Token</span>
-                <span className="text-gray-900 font-semibold text-right">Planeta SOSPlanet</span>
+              <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
+                <span className="text-gray-600 dark:text-green-100/70 font-medium">Nome do Token</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">Planeta SOSPlanet</span>
               </div>
-              <div className="flex justify-between items-center py-4 border-b border-gray-100">
-                <span className="text-gray-600 font-medium">Símbolo</span>
-                <span className="text-gray-900 font-semibold text-right">SOS</span>
+              <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
+                <span className="text-gray-600 dark:text-green-100/70 font-medium">Símbolo</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">SOS</span>
               </div>
-              <div className="flex justify-between items-center py-4 border-b border-gray-100">
-                <span className="text-gray-600 font-medium">Plataforma</span>
-                <span className="text-gray-900 font-semibold text-right">Algorand</span>
+              <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
+                <span className="text-gray-600 dark:text-green-100/70 font-medium">Plataforma</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">Algorand</span>
               </div>
-              <div className="flex justify-between items-center py-4 border-b border-gray-100">
-                <span className="text-gray-600 font-medium">ID do token</span>
-                <span className="text-gray-900 font-semibold text-right">735028557</span>
+              <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
+                <span className="text-gray-600 dark:text-green-100/70 font-medium">ID do token</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">735028557</span>
               </div>
-              <div className="flex justify-between items-center py-4 border-b border-gray-100">
-                <span className="text-gray-600 font-medium">Fornecimento Total</span>
-                <span className="text-gray-900 font-semibold text-right">1.000.000.000 SOS</span>
+              <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
+                <span className="text-gray-600 dark:text-green-100/70 font-medium">Fornecimento Total</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">1.000.000.000 SOS</span>
               </div>
               <div className="flex justify-between items-center py-4">
-                <span className="text-gray-600 font-medium">Status</span>
-                <span className="text-green-600 font-semibold text-right">Ativo</span>
+                <span className="text-gray-600 dark:text-green-100/70 font-medium">Status</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold text-right">Ativo</span>
               </div>
             </div>
 
-            <div className="mt-8 bg-green-50 p-4 rounded-xl text-center">
-              <p className="text-green-800 font-medium text-sm">
+            <div className="mt-8 bg-green-50 dark:bg-green-900/20 p-4 rounded-xl text-center">
+              <p className="text-green-800 dark:text-green-300 font-medium text-sm">
                 10% de cada transação é direcionado para projetos de reflorestamento e ações sociais
               </p>
             </div>
             
             <div className="mt-6 flex justify-center">
-              <a href="#" className="text-green-600 font-medium hover:text-green-800 text-sm flex items-center gap-1 transition-colors">
+              <a href="#" className="text-green-600 dark:text-green-400 font-medium hover:text-green-800 dark:hover:text-green-300 text-sm flex items-center gap-1 transition-colors">
                 Ver no Algorand Explorer <RefreshCw className="w-3 h-3 ml-1" />
               </a>
             </div>
@@ -148,25 +156,91 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
 
         </div>
 
+        {/* Tokenomics Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-24"
+        >
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-green-400 tracking-tight">A Anatomia do Token</h3>
+            <p className="text-gray-600 dark:text-green-100/70 mt-3 max-w-2xl mx-auto">Distribuição visual e transparente dos recursos do ecossistema SOSPlanet.</p>
+          </div>
+          
+          <div className="bg-white dark:bg-[#111f18]/50 border border-gray-100 dark:border-green-900/30 rounded-3xl p-6 md:p-12 shadow-sm flex flex-col md:flex-row items-center justify-center gap-12">
+            <div className="w-full md:w-1/2 h-[300px] md:h-[400px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    itemStyle={{ color: '#1f2937', fontWeight: 500 }}
+                  />
+                  <Pie
+                    data={tokenomicsData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={80}
+                    outerRadius={120}
+                    paddingAngle={3}
+                    dataKey="value"
+                    animationDuration={1500}
+                    animationBegin={200}
+                  >
+                    {tokenomicsData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} className="hover:opacity-80 transition-opacity duration-300 outline-none" />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            
+            <div className="w-full md:w-1/2 space-y-6">
+              {tokenomicsData.map((item, idx) => (
+                <div key={idx} className="flex items-center group">
+                  <div className="w-4 h-4 rounded-full mr-4 shrink-0 transition-transform group-hover:scale-125" style={{ backgroundColor: item.color }}></div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-semibold text-gray-800 dark:text-green-50">{item.name}</span>
+                      <span className="font-bold text-gray-900 dark:text-green-300">{item.value}%</span>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${item.value}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, delay: 0.5 + (idx * 0.1) }}
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: item.color }}
+                      ></motion.div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
         <motion.div 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.6 }}
-          className="mt-12 flex items-center gap-4 text-sm font-medium"
+          className="mt-12 flex items-center justify-center gap-4 text-sm font-medium"
         >
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={onOpenModal}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-md transition-colors shadow-sm"
+            className="bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white px-6 py-2.5 rounded-md transition-colors shadow-sm"
           >
             Comprar Token SOS
           </motion.button>
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="border border-green-500 text-green-700 hover:bg-green-50 px-6 py-2.5 rounded-md transition-colors"
+            className="border border-green-500 dark:border-green-700 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 px-6 py-2.5 rounded-md transition-colors"
           >
             Relatório técnico
           </motion.button>

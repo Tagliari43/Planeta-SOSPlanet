@@ -5,6 +5,13 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+@layer base {
+  html.dark {
+    background-color: #0b1410; /* Charcoal / very dark moss green */
+    color: #4ade80; /* Soft neon green */
+  }
+}
+
 /* Custom Scrollbar for better visibility */
 ::-webkit-scrollbar {
   width: 12px;

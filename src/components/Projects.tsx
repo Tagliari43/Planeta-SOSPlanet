@@ -43,7 +43,7 @@ export function Projects() {
   };
 
   return (
-    <section id="projetos" className="py-24 px-6 bg-white overflow-hidden">
+    <section id="projetos" className="py-24 px-6 bg-white dark:bg-transparent overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
@@ -52,8 +52,8 @@ export function Projects() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-green-600 tracking-tight mb-6">Nossos Projetos</h2>
-          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-bold text-green-600 dark:text-green-500 tracking-tight mb-6">Nossos Projetos</h2>
+          <p className="text-xl text-gray-600 dark:text-green-100 max-w-4xl mx-auto leading-relaxed">
             Conheça as iniciativas que estamos desenvolvendo para criar impacto real e duradouro. Com sua participação, podemos expandir esses projetos e iniciar novos.
           </p>
         </motion.div>
@@ -70,19 +70,19 @@ export function Projects() {
               key={idx} 
               variants={itemVariants}
               whileHover={{ y: -10 }}
-              className="flex flex-col border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full bg-white group cursor-pointer"
+              className="flex flex-col border border-gray-100 dark:border-green-900/40 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full bg-white dark:bg-[#0b1410] dark:shadow-green-900/20 group cursor-pointer"
             >
               <div className={`${proj.headerColor} p-12 flex justify-center items-center h-48 transition-colors duration-300 opacity-90 group-hover:opacity-100`}>
                 <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
                   {proj.icon}
                 </motion.div>
               </div>
-              <div className="p-8 flex-1 flex flex-col items-center text-center">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{proj.title}</h3>
-                <p className="text-gray-600 leading-relaxed mb-8 flex-1">
+              <div className="p-8 flex-1 flex flex-col items-center text-center dark:bg-white/5">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-green-300 mb-4">{proj.title}</h3>
+                <p className="text-gray-600 dark:text-green-100/70 leading-relaxed mb-8 flex-1">
                   {proj.description}
                 </p>
-                <button className="w-full border border-gray-200 text-green-700 font-medium py-3 rounded-md group-hover:bg-green-50 group-hover:border-green-300 transition-colors">
+                <button className="w-full border border-gray-200 dark:border-green-800 text-green-700 dark:text-green-400 font-medium py-3 rounded-md group-hover:bg-green-50 dark:group-hover:bg-green-900/50 group-hover:border-green-300 dark:group-hover:border-green-600 transition-colors">
                   Saiba mais
                 </button>
               </div>
