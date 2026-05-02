@@ -14,6 +14,7 @@ import { TokenSection } from './components/TokenSection';
 import { Projects } from './components/Projects';
 import { Footer } from './components/Footer';
 import { BuyTokenModal } from './components/BuyTokenModal';
+import { OrchestratorChat } from './components/OrchestratorChat';
 
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,6 +39,8 @@ export default function App() {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
       />
+      
+      <OrchestratorChat />
     </div>
   );
 }

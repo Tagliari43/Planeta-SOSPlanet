@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Heart, Leaf, Lightbulb, BookOpen, Rocket, Copy, Check, Globe } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Logo } from './Logo';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface BuyTokenModalProps {
   isOpen: boolean;
@@ -14,13 +15,13 @@ const DonationAddress = ({ coin, address, warning, copiedAddress, onCopy }: any)
       <span className="font-semibold text-gray-800 text-sm">{coin}:</span>
       <button 
         onClick={() => onCopy(address)}
-        className="text-green-600 hover:text-green-700 flex items-center justify-center gap-1 text-xs font-medium bg-green-50 px-3 py-1.5 rounded transition-colors"
+        className="text-green-600 hover:text-green-700 flex items-center justify-center gap-1 text-xs font-medium bg-green-50 px-3 py-1.5 rounded transition-colors self-start sm:self-auto"
       >
         {copiedAddress === address ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
         {copiedAddress === address ? 'Copiado!' : 'Copiar endereço'}
       </button>
     </div>
-    <div className="font-mono text-xs text-gray-800 break-all bg-white p-3 border border-gray-200 rounded mb-2 select-all">
+    <div className="font-mono text-xs text-gray-800 break-words sm:break-all whitespace-pre-wrap bg-white p-3 border border-gray-200 rounded mb-2 select-all overflow-wrap-anywhere">
       {address}
     </div>
     <p className="text-xs text-red-600 font-medium">{warning}</p>
@@ -30,14 +31,27 @@ const DonationAddress = ({ coin, address, warning, copiedAddress, onCopy }: any)
 export function BuyTokenModal({ isOpen, onClose }: BuyTokenModalProps) {
   const [activeTab, setActiveTab] = useState<'missao' | 'participar' | 'futuro'>('missao');
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    if (showToast) {
+      timeout = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timeout);
+  }, [showToast]);
 
   if (!isOpen) return null;
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedAddress(text);
+    setShowToast(true);
     setTimeout(() => setCopiedAddress(null), 2000);
   };
+
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 pb-20 sm:pb-6">
@@ -344,6 +358,20 @@ export function BuyTokenModal({ isOpen, onClose }: BuyTokenModalProps) {
         </div>
         
       </div>
+      
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] bg-green-500 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 font-medium text-sm"
+          >
+            <Check className="w-5 h-5 bg-white/20 rounded-full p-0.5" />
+            Endereço da Carteira Copiado com Sucesso!
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

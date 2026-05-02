@@ -1,4 +1,5 @@
 import { TreePine, Users, BookOpen } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export function Projects() {
   const projects = [
@@ -22,40 +23,88 @@ export function Projects() {
     }
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6 }
+    }
+  };
+
   return (
-    <section id="projetos" className="py-24 px-6 bg-white">
+    <section id="projetos" className="py-24 px-6 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-green-600 tracking-tight mb-6">Nossos Projetos</h2>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
             Conheça as iniciativas que estamos desenvolvendo para criar impacto real e duradouro. Com sua participação, podemos expandir esses projetos e iniciar novos.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           {projects.map((proj, idx) => (
-            <div key={idx} className="flex flex-col border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all h-full bg-white">
-              <div className={`${proj.headerColor} p-12 flex justify-center items-center h-48`}>
-                {proj.icon}
+            <motion.div 
+              key={idx} 
+              variants={itemVariants}
+              whileHover={{ y: -10 }}
+              className="flex flex-col border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full bg-white group cursor-pointer"
+            >
+              <div className={`${proj.headerColor} p-12 flex justify-center items-center h-48 transition-colors duration-300 opacity-90 group-hover:opacity-100`}>
+                <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 300 }}>
+                  {proj.icon}
+                </motion.div>
               </div>
               <div className="p-8 flex-1 flex flex-col items-center text-center">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">{proj.title}</h3>
                 <p className="text-gray-600 leading-relaxed mb-8 flex-1">
                   {proj.description}
                 </p>
-                <button className="w-full border border-gray-200 text-green-700 font-medium py-3 rounded-md hover:bg-gray-50 transition-colors">
+                <button className="w-full border border-gray-200 text-green-700 font-medium py-3 rounded-md group-hover:bg-green-50 group-hover:border-green-300 transition-colors">
                   Saiba mais
                 </button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="mt-12 flex justify-center">
-          <button className="bg-green-600 hover:bg-green-700 text-white font-medium px-8 py-3 rounded-md transition-colors shadow-sm">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.8 }}
+          className="mt-12 flex justify-center"
+        >
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-green-600 hover:bg-green-700 text-white font-medium px-8 py-3 rounded-md transition-colors shadow-sm"
+          >
             Ver todos os projetos
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );
