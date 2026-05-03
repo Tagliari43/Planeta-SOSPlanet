@@ -1,4 +1,4 @@
-import { Menu, X, Moon, Sun, Wallet, ShieldCheck, Globe, Volume2, VolumeX, AudioLines, Flower2 } from 'lucide-react';
+import { Menu, X, Moon, Sun, Wallet, ShieldCheck, Globe, Volume2, VolumeX, AudioLines, Flower2, Sparkles, Bell, Wind, Vote, Sprout, Droplets, Palette } from 'lucide-react';
 import { useState } from 'react';
 import { Logo } from './Logo';
 import { motion, AnimatePresence } from 'motion/react';
@@ -14,6 +14,8 @@ interface NavProps {
   onLanguageChange: (lang: string) => void;
   onAudioToggle: (playing: boolean) => void;
   onSerenityToggle: () => void;
+  biome: 'amazon' | 'reef' | 'savanna';
+  onBiomeChange: (biome: 'amazon' | 'reef' | 'savanna') => void;
 }
 
 const languages = [
@@ -23,9 +25,11 @@ const languages = [
   { code: 'ZH', name: '中文' },
 ];
 
-export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggleDashboard, showDashboard, onLanguageChange, onAudioToggle, onSerenityToggle }: NavProps) {
+export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggleDashboard, showDashboard, onLanguageChange, onAudioToggle, onSerenityToggle, biome, onBiomeChange }: NavProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showBiomeMenu, setShowBiomeMenu] = useState(false);
   const [currentLang, setCurrentLang] = useState('PT');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -95,6 +99,58 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
           </div>
 
           <div className="flex items-center gap-3 border-l border-gray-200 dark:border-green-900/30 pl-6">
+            <div className="relative">
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors w-8 h-8 flex items-center justify-center rounded-full relative z-50"
+                title="O Sino de Vento"
+              >
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+                <span className="absolute top-1 right-1 w-2 h-2 bg-emerald-500 rounded-full"></span>
+              </button>
+
+              <AnimatePresence>
+                 {showNotifications && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute top-12 right-0 w-80 bg-white/90 dark:bg-[#0b1410]/95 backdrop-blur-xl border border-gray-200 dark:border-emerald-900/50 rounded-2xl shadow-2xl overflow-hidden z-50"
+                    >
+                      <div className="p-4 border-b border-gray-100 dark:border-emerald-900/30">
+                         <h4 className="text-gray-900 dark:text-emerald-50 font-bold flex items-center gap-2">
+                           <Wind className="w-4 h-4 text-emerald-400" /> O Sino de Vento
+                         </h4>
+                      </div>
+                      <div className="max-h-80 overflow-y-auto p-2">
+                         {[
+                           { id: 1, title: 'Nova votação no Conselho!', time: 'Agora', icon: Vote },
+                           { id: 2, title: 'Sua semente virou um broto!', time: 'Há 2h', icon: Sprout },
+                           { id: 3, title: 'Doação para a Amazônia concluída', time: 'Há 5h', icon: Droplets },
+                         ].map((notif, idx) => (
+                            <motion.div 
+                              key={notif.id}
+                              initial={{ opacity: 0, y: -20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.1, type: "spring", stiffness: 100 }}
+                              className="p-3 hover:bg-gray-50 dark:hover:bg-emerald-900/20 rounded-xl cursor-pointer transition-colors flex items-start gap-3 group mb-1"
+                            >
+                               <div className="bg-emerald-100 dark:bg-emerald-900/40 p-2 rounded-full text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                                 <notif.icon className="w-4 h-4" />
+                               </div>
+                               <div>
+                                 <p className="text-sm font-medium text-gray-800 dark:text-emerald-50/90">{notif.title}</p>
+                                 <span className="text-xs text-gray-400 dark:text-emerald-500/60">{notif.time}</span>
+                               </div>
+                            </motion.div>
+                         ))}
+                      </div>
+                    </motion.div>
+                 )}
+              </AnimatePresence>
+            </div>
+
             <button 
               onClick={onSerenityToggle} 
               className="text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors w-8 h-8 flex items-center justify-center rounded-full"
@@ -124,6 +180,30 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
             <button onClick={toggleTheme} className="text-gray-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors" aria-label="Toggle Dark Mode">
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
+
+            <div className="relative">
+              <button 
+                onClick={() => setShowBiomeMenu(!showBiomeMenu)}
+                className="text-gray-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors ml-2" 
+                title="Biomas da Alma"
+              >
+                <Palette className="w-5 h-5" />
+              </button>
+              <AnimatePresence>
+                {showBiomeMenu && (
+                   <motion.div 
+                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                     animate={{ opacity: 1, y: 0, scale: 1 }}
+                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                     className="absolute top-10 right-0 w-48 bg-white/90 dark:bg-[#0b1410]/95 backdrop-blur-xl border border-gray-200 dark:border-emerald-900/50 rounded-2xl shadow-xl overflow-hidden z-50 flex flex-col p-2 gap-1"
+                   >
+                      <button onClick={() => { onBiomeChange('amazon'); setShowBiomeMenu(false); }} className={`px-4 py-2 text-left text-sm rounded-xl transition-colors ${biome === 'amazon' ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'text-gray-700 dark:text-emerald-100/70 hover:bg-gray-50 dark:hover:bg-emerald-900/20'}`}>Amazônia Profunda</button>
+                      <button onClick={() => { onBiomeChange('reef'); setShowBiomeMenu(false); }} className={`px-4 py-2 text-left text-sm rounded-xl transition-colors ${biome === 'reef' ? 'bg-cyan-100 dark:bg-cyan-900/50 text-cyan-700 dark:text-cyan-300' : 'text-gray-700 dark:text-emerald-100/70 hover:bg-gray-50 dark:hover:bg-cyan-900/20'}`}>Recife de Cristal</button>
+                      <button onClick={() => { onBiomeChange('savanna'); setShowBiomeMenu(false); }} className={`px-4 py-2 text-left text-sm rounded-xl transition-colors ${biome === 'savanna' ? 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300' : 'text-gray-700 dark:text-emerald-100/70 hover:bg-gray-50 dark:hover:bg-amber-900/20'}`}>Savana Dourada</button>
+                   </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
@@ -141,14 +221,34 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
             <button
               onClick={onToggleDashboard}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition-all shadow-sm border",
+                "flex items-center gap-2 px-3 py-1.5 rounded-full font-medium text-sm transition-all shadow-sm border relative group/avatar",
                 showDashboard 
                   ? "bg-green-100 dark:bg-green-900/40 border-green-300 dark:border-green-600 text-green-800 dark:text-green-300"
                   : "bg-[#0b1410] dark:bg-green-900/20 hover:bg-gray-900 dark:hover:bg-green-800/40 text-white dark:text-green-400 border-transparent dark:border-green-800/50"
               )}
             >
-              <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white">
-                <ShieldCheck className="w-3 h-3" />
+              <div className="relative w-8 h-8 flex items-center justify-center">
+                 <motion.div 
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-emerald-500/30 rounded-full blur-md"
+                 />
+                 <motion.svg 
+                    viewBox="0 0 100 100" 
+                    className="w-full h-full relative z-10 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+                    whileHover={{ scale: 1.15, rotate: 90 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                 >
+                    <motion.circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-400" animate={{ r: [25, 30, 25] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
+                    <motion.circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" className="text-emerald-300/50" animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
+                    <circle cx="50" cy="50" r="15" fill="currentColor" className="text-emerald-500" />
+                 </motion.svg>
+                 
+                 {/* Tooltip Alma Digital */}
+                 <div className="absolute top-full mt-2 w-max left-1/2 -translate-x-1/2 bg-[#0b1410]/90 backdrop-blur-md border border-emerald-500/30 text-emerald-100 text-[10px] px-3 py-1.5 rounded-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity pointer-events-none shadow-[0_0_15px_rgba(52,211,153,0.3)] z-50 flex items-center gap-2">
+                    <Sparkles className="w-3 h-3 text-emerald-400" />
+                    <span>Fase: Semente Desperta</span>
+                 </div>
               </div>
               <span className="font-mono text-xs">{walletAddress}</span>
             </button>
@@ -169,9 +269,23 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
           {walletAddress && (
              <button
                onClick={onToggleDashboard}
-               className="w-8 h-8 rounded-full bg-[#0b1410] dark:bg-green-900/40 border border-transparent dark:border-green-800 flex items-center justify-center text-white dark:text-green-400"
+               className="relative w-8 h-8 rounded-full border border-transparent dark:border-green-800 flex items-center justify-center text-white dark:text-green-400 group/avatar z-50"
              >
-               <ShieldCheck className="w-4 h-4" />
+                 <motion.div 
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 bg-emerald-500/30 rounded-full blur-md pointer-events-none"
+                 />
+                 <motion.svg 
+                    viewBox="0 0 100 100" 
+                    className="w-full h-full relative z-10 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+                    whileHover={{ scale: 1.15, rotate: 90 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                 >
+                    <motion.circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-400" animate={{ r: [25, 30, 25] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
+                    <motion.circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" className="text-emerald-300/50" animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} />
+                    <circle cx="50" cy="50" r="15" fill="currentColor" className="text-emerald-500" />
+                 </motion.svg>
              </button>
           )}
 

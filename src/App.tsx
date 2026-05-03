@@ -35,6 +35,7 @@ export default function App() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [showDashboard, setShowDashboard] = useState<boolean>(false);
   const [isSerenityMode, setIsSerenityMode] = useState(false);
+  const [biome, setBiome] = useState<'amazon' | 'reef' | 'savanna'>('amazon');
   const [toastMessage, setToastMessage] = useState<{text: string, type?: 'globe' | 'audio'} | null>(null);
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -81,6 +82,8 @@ export default function App() {
           onLanguageChange={handleLanguageChange}
           onAudioToggle={handleAudioToggle}
           onSerenityToggle={() => setIsSerenityMode(!isSerenityMode)}
+          biome={biome}
+          onBiomeChange={setBiome}
         />
         
         <main className="flex-1 pt-20">
@@ -93,7 +96,7 @@ export default function App() {
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.4 }}
             >
-              <GuardianDashboard walletAddress={walletAddress} />
+              <GuardianDashboard walletAddress={walletAddress} biome={biome} />
             </motion.div>
           ) : (
             <motion.div

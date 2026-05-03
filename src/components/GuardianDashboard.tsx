@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trees, GraduationCap, Coins, ShieldCheck, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2 } from 'lucide-react';
+import { Trees, GraduationCap, Coins, ShieldCheck, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { cn } from '../lib/utils';
 
 interface GuardianDashboardProps {
   walletAddress: string;
+  biome?: 'amazon' | 'reef' | 'savanna';
 }
 
 function SporesParticles() {
@@ -74,15 +75,72 @@ const daoProposals = [
   { id: 2, title: 'Nova Parceria de Monitoramento Neural (Santuário)', optionA: 'Aprovar', optionB: 'Rejeitar', votesA: 82, votesB: 18, active: true },
 ];
 
-export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore'>('overview');
+export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque'>('overview');
+  const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
   const [stakingAmount, setStakingAmount] = useState(100);
   const [stakingSeasons, setStakingSeasons] = useState(1);
+  const [proposalText, setProposalText] = useState('');
+  const [isProposing, setIsProposing] = useState(false);
+  const [hasProposed, setHasProposed] = useState(false);
+  const [mapTarget, setMapTarget] = useState<'amazon' | 'congo' | 'se-asia' | null>(null);
+  
+  // Altar e Bosque states
+  const [altarNectar, setAltarNectar] = useState(65); // 0 to 100
+  const [isHarvestingAltar, setIsHarvestingAltar] = useState(false);
+  const [bosqueNodes, setBosqueNodes] = useState(Array.from({ length: 40 }).map((_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    address: `0x${Math.random().toString(16).slice(2, 6).toUpperCase()}...${Math.random().toString(16).slice(2, 6).toUpperCase()}`,
+    level: Math.floor(Math.random() * 10) + 1,
+    size: Math.random() * 0.8 + 0.4
+  })));
+  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
+  
+  // Coro da Floresta / Fireflies State
+  const [fireflies, setFireflies] = useState<{id: number, text: string, xPos: number}[]>([]);
+  const [coroInput, setCoroInput] = useState('');
+  const [fireflyIdCounter, setFireflyIdCounter] = useState(0);
+
+  const [gaiaVoiceOpen, setGaiaVoiceOpen] = useState(false);
+  const [gaiaVoiceStatus, setGaiaVoiceStatus] = useState<'idle' | 'thinking' | 'answered'>('idle');
+  const [gaiaAnswer, setGaiaAnswer] = useState('');
+
+  const handleGaiaAsk = (questionId: string) => {
+    setGaiaVoiceStatus('thinking');
+    setTimeout(() => {
+       if (questionId === 'q1') setGaiaAnswer('A seiva pulsa forte hoje. Nossa tesouraria está vibrante e 12 projetos estão germinando no ecossistema global.');
+       if (questionId === 'q2') setGaiaAnswer('Para evoluir sua semente, doe liquidez às missões de reflorestamento e vote ativamente nas propostas do Conselho de Guardiões.');
+       if (questionId === 'q3') setGaiaAnswer('O vento diz que uma nova aliança entre os elfos do Ethereum e os druidas da Polygon está se formando...');
+       setGaiaVoiceStatus('answered');
+    }, 2500);
+  };
+
+  const handleSendFirefly = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!coroInput.trim()) return;
+    const newFirefly = { id: fireflyIdCounter, text: coroInput, xPos: Math.random() * 80 + 10 };
+    setFireflies(prev => [...prev, newFirefly]);
+    setFireflyIdCounter(prev => prev + 1);
+    setCoroInput('');
+    // Remove after 15 seconds
+    setTimeout(() => {
+       setFireflies(prev => prev.filter(f => f.id !== newFirefly.id));
+    }, 15000);
+  };
+
   const sosAmount = (Number(algoAmount) || 0) * 1500;
   const [isSwapping, setIsSwapping] = useState(false);
   const [swapSuccessEffect, setSwapSuccessEffect] = useState(false);
+  const [incineratingCard, setIncineratingCard] = useState<string | null>(null);
+
+  const handleIncinerate = (id: string) => {
+    setIncineratingCard(id);
+    setTimeout(() => setIncineratingCard(null), 2500);
+  };
 
   const handleSwap = () => {
     if (!algoAmount) return;
@@ -101,6 +159,8 @@ export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
   const [totalO2, setTotalO2] = useState(1250);
   const [isHarvesting, setIsHarvesting] = useState(false);
   const [showHarvestEffect, setShowHarvestEffect] = useState(false);
+  const [isMigratingVortex, setIsMigratingVortex] = useState(false);
+  const [ninhoIndex, setNinhoIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -242,8 +302,53 @@ export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
   }, [isDraggingSlider]);
 
   return (
-    <section className="py-24 px-6 bg-gray-50 dark:bg-[#060c08] min-h-screen transition-colors relative overflow-hidden">
-      <SporesParticles />
+    <section className={cn("py-24 px-6 min-h-screen transition-colors relative overflow-hidden duration-1000", biome === 'amazon' ? 'bg-gray-50 dark:bg-[#060c08]' : biome === 'reef' ? 'bg-cyan-50 dark:bg-[#031015]' : 'bg-amber-50 dark:bg-[#140b03]')}>
+      
+      {/* Biome Overlay Transition */}
+      <AnimatePresence>
+         {biome === 'reef' && (
+            <motion.div key="reef" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:1.5}} className="absolute inset-0 pointer-events-none z-[1] bg-cyan-900/10 mix-blend-color" />
+         )}
+         {biome === 'savanna' && (
+            <motion.div key="savanna" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:1.5}} className="absolute inset-0 pointer-events-none z-[1] bg-orange-900/10 mix-blend-color" />
+         )}
+      </AnimatePresence>
+
+      {/* Gaia Mood Overlay */}
+      <AnimatePresence>
+         {gaiaMood === 'dew' && (
+            <motion.div key="dew" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:1.5}} className="absolute inset-0 pointer-events-none z-[1] bg-gradient-to-br from-green-500/5 via-emerald-500/5 to-transparent mix-blend-overlay" />
+         )}
+         {gaiaMood === 'rain' && (
+            <motion.div key="rain" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:1.5}} className="absolute inset-0 pointer-events-none z-[1] bg-blue-900/10 mix-blend-overlay overflow-hidden">
+               {/* Rain effect */}
+               {[...Array(30)].map((_, i) => (
+                  <motion.div
+                    key={`rain-${i}`}
+                    className="absolute w-[1px] bg-gradient-to-b from-transparent via-blue-400/40 to-transparent"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      height: `${Math.random() * 100 + 50}px`,
+                      top: `-${Math.random() * 20 + 20}%`
+                    }}
+                    animate={{
+                      top: '120%'
+                    }}
+                    transition={{
+                      duration: Math.random() * 0.8 + 0.6,
+                      repeat: Infinity,
+                      ease: "linear",
+                      delay: Math.random() * 2
+                    }}
+                  />
+               ))}
+            </motion.div>
+         )}
+         {gaiaMood === 'twilight' && (
+            <motion.div key="twilight" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} transition={{duration:1.5}} className="absolute inset-0 pointer-events-none z-[1] bg-gradient-to-br from-orange-500/10 via-purple-500/10 to-transparent mix-blend-overlay" />
+         )}
+      </AnimatePresence>
+      <div className="absolute inset-0 z-[2] pointer-events-none"><SporesParticles /></div>
       <div className="max-w-6xl mx-auto relative z-10">
         
         {/* Header Dashboard */}
@@ -338,7 +443,7 @@ export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
                  : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
             )}
           >
-            <Vote className="w-4 h-4" /> Conselho da Floresta
+            <Vote className="w-4 h-4" /> O Canto dos Anciões
           </button>
           <button 
             onClick={() => setActiveTab('viveiro')}
@@ -406,6 +511,110 @@ export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
           >
             <Flower className="w-4 h-4" /> A Árvore
           </button>
+          <button 
+            onClick={() => setActiveTab('raiz')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'raiz' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+            )}
+          >
+            <Activity className="w-4 h-4" /> A Raiz da Verdade
+          </button>
+          <button 
+            onClick={() => setActiveTab('ponte')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'ponte' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+            )}
+          >
+            <Link className="w-4 h-4" /> A Ponte
+          </button>
+          <button 
+            onClick={() => setActiveTab('ninho')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'ninho' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+            )}
+          >
+            <Sprout className="w-4 h-4" /> O Ninho
+          </button>
+          <button 
+            onClick={() => setActiveTab('espelho')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'espelho' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+            )}
+          >
+            <Droplets className="w-4 h-4" /> O Espelho
+          </button>
+          <button 
+            onClick={() => setActiveTab('trilha')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'trilha' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+            )}
+          >
+            <MapPin className="w-4 h-4" /> A Trilha
+          </button>
+          <button 
+            onClick={() => setActiveTab('altar')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'altar' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+            )}
+          >
+            <Droplets className="w-4 h-4" /> O Altar
+          </button>
+          <button 
+            onClick={() => setActiveTab('bosque')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'bosque' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+            )}
+          >
+            <Network className="w-4 h-4" /> Constelações
+          </button>
+        </div>
+
+        {/* Gaia Mood Switcher */}
+        <div className="flex justify-start mb-6 -mt-2 relative z-20">
+          <div className="bg-white/80 dark:bg-[#111f18]/80 backdrop-blur-md rounded-full p-1.5 flex gap-1 border border-gray-200 dark:border-green-900/40 shadow-sm">
+             <button
+               onClick={() => setGaiaMood('dew')}
+               title="Manhã de Orvalho"
+               className={cn("p-2 rounded-full transition-all", gaiaMood === 'dew' ? "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400" : "text-gray-400 hover:text-emerald-500")}
+             >
+               <Sun className="w-4 h-4" />
+             </button>
+             <button
+               onClick={() => setGaiaMood('rain')}
+               title="Chuva Noturna"
+               className={cn("p-2 rounded-full transition-all", gaiaMood === 'rain' ? "bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400" : "text-gray-400 hover:text-blue-500")}
+             >
+               <CloudRain className="w-4 h-4" />
+             </button>
+             <button
+               onClick={() => setGaiaMood('twilight')}
+               title="Crepúsculo Solar"
+               className={cn("p-2 rounded-full transition-all", gaiaMood === 'twilight' ? "bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400" : "text-gray-400 hover:text-amber-500")}
+             >
+               <Moon className="w-4 h-4" />
+             </button>
+          </div>
         </div>
 
         <AnimatePresence mode="wait">
@@ -624,6 +833,82 @@ export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
           </motion.div>
         </div>
 
+        {/* O Eco-Mapa Interativo */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }} className="mt-8 bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30 relative overflow-hidden flex flex-col">
+           <div className="flex items-center gap-3 mb-6">
+             <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-inner">
+               <Globe className="w-5 h-5" />
+             </div>
+             <div>
+               <h3 className="text-xl font-bold text-gray-900 dark:text-blue-50 tracking-tight">O Eco-Mapa Interativo</h3>
+               <p className="text-sm text-gray-500 dark:text-blue-100/60 mt-1">O Pulsar dos Biomas: Aloque energia vital nos pulmões do planeta.</p>
+             </div>
+           </div>
+
+           <div className="relative w-full h-[400px] border border-gray-100 dark:border-blue-900/30 rounded-2xl overflow-hidden bg-[#0b1410] flex items-center justify-center">
+             <div className="absolute inset-0 z-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg')] bg-no-repeat bg-center bg-contain opacity-30 dark:opacity-20 mix-blend-screen overflow-hidden" />
+             
+             {/* Map Nodes */}
+             {[
+               { id: 'amazon', top: '65%', left: '30%', name: 'Amazônia', flora: '85%', water: '92%', o2: '12k', color: 'bg-emerald-500', shadow: 'shadow-emerald-500' },
+               { id: 'congo', top: '65%', left: '52%', name: 'Congo', flora: '78%', water: '88%', o2: '9.5k', color: 'bg-green-500', shadow: 'shadow-green-500' },
+               { id: 'se-asia', top: '55%', left: '75%', name: 'Sudeste Asiático', flora: '62%', water: '75%', o2: '7.2k', color: 'bg-teal-500', shadow: 'shadow-teal-500' }
+             ].map((node) => (
+                <div 
+                  key={node.id} 
+                  className="absolute"
+                  style={{ top: node.top, left: node.left, transform: 'translate(-50%, -50%)' }}
+                  onMouseEnter={() => setMapTarget(node.id as any)}
+                  onMouseLeave={() => setMapTarget(null)}
+                >
+                  <div className={cn("w-4 h-4 rounded-full cursor-pointer relative z-20 shadow-[0_0_15px_rgba(34,197,94,0.8)] border-2 border-[#0b1410]", node.color)}>
+                     <div className={cn("absolute inset-0 rounded-full animate-ping opacity-60", node.color)} />
+                  </div>
+                  
+                  <AnimatePresence>
+                    {mapTarget === node.id && (
+                       <motion.div 
+                         initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                         animate={{ opacity: 1, scale: 1, y: 0 }}
+                         exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                         transition={{ duration: 0.2 }}
+                         className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-64 bg-white/20 dark:bg-black/60 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-2xl z-30 pointer-events-none"
+                       >
+                         <h4 className="text-white font-bold text-lg mb-3 tracking-tight flex items-center gap-2">
+                           <MapPin className="w-4 h-4 text-emerald-400" /> {node.name}
+                         </h4>
+                         <div className="space-y-3">
+                           <div>
+                             <div className="flex justify-between text-xs text-white/80 font-bold mb-1">
+                               <span>Resgate de Flora Ativo</span>
+                               <span className="text-emerald-400">{node.flora}</span>
+                             </div>
+                             <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                               <div className="h-full bg-emerald-400" style={{ width: node.flora }} />
+                             </div>
+                           </div>
+                           <div>
+                             <div className="flex justify-between text-xs text-white/80 font-bold mb-1">
+                               <span>Umidade Restaurada</span>
+                               <span className="text-blue-400">{node.water}</span>
+                             </div>
+                             <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                               <div className="h-full bg-blue-400" style={{ width: node.water }} />
+                             </div>
+                           </div>
+                           <div className="pt-2 mt-2 border-t border-white/10 flex justify-between items-center text-xs font-mono">
+                             <span className="text-white/60">Geração de O2</span>
+                             <span className="text-emerald-300 font-bold">{node.o2} SOS/dia</span>
+                           </div>
+                         </div>
+                       </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+             ))}
+           </div>
+        </motion.div>
+
         {/* A Teia de Micélio */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mt-8 bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30 relative overflow-hidden flex flex-col">
            <div className="flex items-center gap-3 mb-6">
@@ -761,115 +1046,110 @@ export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
               transition={{ duration: 0.3 }}
               className="space-y-6"
             >
-              <div className="bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30">
-                <div className="flex items-center gap-3 mb-8">
-                   <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center text-green-600 dark:text-green-400">
-                     <Vote className="w-5 h-5" />
-                   </div>
-                   <div>
-                     <h3 className="text-xl font-bold text-gray-900 dark:text-green-50 tracking-tight">Conselho da Floresta</h3>
-                     <p className="text-sm text-gray-500 dark:text-green-100/60 transition-colors">Decida as próximas raízes de impacto do ecossistema.</p>
-                   </div>
-                </div>
+               <div className="bg-white/80 dark:bg-[#080d0a]/80 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-emerald-900/30 overflow-hidden relative">
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none" />
+                  <div className="flex items-center justify-center gap-3 mb-10 relative z-10 text-center">
+                     <div>
+                       <h3 className="text-3xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight flex items-center justify-center gap-3">
+                         <Vote className="w-8 h-8 text-emerald-400" /> O Canto dos Anciões
+                       </h3>
+                       <p className="text-gray-500 dark:text-emerald-100/60 mt-2">Canalize sua energia vital (Tokens) nas esferas de deliberação. O equilíbrio do ecossistema responde ao peso da sua vontade.</p>
+                     </div>
+                  </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {daoProposals.map((proposal, idx) => (
-                    <motion.div 
-                      key={proposal.id}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: idx * 0.1 }}
-                      className="bg-white/50 dark:bg-[#0b1410]/50 border border-gray-200 dark:border-green-900/40 rounded-3xl p-6 relative overflow-hidden group hover:border-green-300 dark:hover:border-green-700/50 transition-colors"
-                    >
-                      {/* Inner success animation */}
-                      <AnimatePresence>
-                        {voteSuccess === proposal.id && (
-                          <motion.div 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="absolute inset-0 z-20 bg-green-500/90 dark:bg-green-900/95 backdrop-blur-sm flex flex-col items-center justify-center text-white"
-                          >
-                            <motion.div 
-                              initial={{ scale: 0 }} 
-                              animate={{ scale: 1, rotate: 360 }} 
-                              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                            >
-                              <Sparkles className="w-12 h-12 text-yellow-300 mb-3" />
-                            </motion.div>
-                            <p className="font-bold text-lg mb-1 tracking-tight">Voto registrado eternamente na Blockchain</p>
-                            <p className="text-sm text-green-100/80">O Conselho agradece a sua sabedoria.</p>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                    {daoProposals.map((proposal, idx) => (
+                      <div key={proposal.id} className="bg-white/50 dark:bg-[#0b1410] border border-gray-100 dark:border-emerald-900/40 rounded-3xl p-6 relative flex flex-col hover:border-emerald-500/30 transition-all shadow-xl">
+                         <div className="mb-8 text-center flex-1">
+                            <span className="inline-block bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3">Tensão Ativa</span>
+                            <h4 className="text-lg font-bold text-gray-900 dark:text-emerald-50 leading-snug">{proposal.title}</h4>
+                         </div>
 
-                      <div className="flex justify-between items-start mb-6">
-                        <h4 className="text-lg font-bold text-gray-900 dark:text-green-50 leading-snug max-w-[80%]">{proposal.title}</h4>
-                        <span className="bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full whitespace-nowrap">Ativa</span>
+                         {/* Esferas de Energia */}
+                         <div className="relative flex justify-between items-end h-40">
+                            {/* Esfera A Favor (Luz Esmeralda) */}
+                            <div className="flex flex-col items-center group relative cursor-pointer w-1/2">
+                               <p className="text-xs font-bold text-emerald-400 mb-2">{proposal.optionA} ({proposal.votesA}%)</p>
+                               <div className="relative flex justify-center items-center h-24 w-full">
+                                  <motion.button 
+                                     onClick={(e) => {
+                                        const btn = e.currentTarget;
+                                        setVoteSuccess(proposal.id);
+                                        for(let i=0; i<40; i++) {
+                                           const p = document.createElement('div');
+                                           p.className = `fixed w-2 h-2 rounded-full pointer-events-none z-50 bg-emerald-400`;
+                                           const rect = btn.getBoundingClientRect();
+                                           p.style.left = `${e.clientX}px`;
+                                           p.style.top = `${e.clientY}px`;
+                                           p.style.boxShadow = '0 0 15px #34d399';
+                                           document.body.appendChild(p);
+                                           const tx = (rect.left + rect.width / 2) - e.clientX + (Math.random() * 40 - 20);
+                                           const ty = (rect.top + rect.height / 2) - e.clientY + (Math.random() * 40 - 20);
+                                           p.animate([
+                                              { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                                              { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                                           ], { duration: 600 + Math.random() * 400, easing: 'ease-in' }).onfinish = () => p.remove();
+                                        }
+                                     }}
+                                     className="w-16 h-16 rounded-full bg-emerald-500 relative z-10 hover:w-20 hover:h-20 transition-all duration-300"
+                                     style={{ scale: 0.8 + (proposal.votesA / 100) }}
+                                     animate={{ boxShadow: ['0 0 20px rgba(52,211,153,0.4)', '0 0 50px rgba(52,211,153,0.8)', '0 0 20px rgba(52,211,153,0.4)'] }}
+                                     transition={{ duration: 3, repeat: Infinity }}
+                                  >
+                                     <div className="absolute inset-0 bg-white/20 rounded-full blur-[2px]" />
+                                     <div className="absolute inset-0 bg-emerald-300/30 rounded-full animate-ping opacity-50" />
+                                  </motion.button>
+                               </div>
+                               <button className="mt-4 px-4 py-1.5 bg-emerald-900/40 hover:bg-emerald-800/60 border border-emerald-500/30 rounded-full text-emerald-300 text-xs font-bold transition-colors">
+                                  Canalizar Luz
+                               </button>
+                            </div>
+
+                            <div className="absolute left-1/2 bottom-8 -translate-x-1/2 h-16 w-px bg-gradient-to-b from-transparent via-emerald-900/50 to-transparent" />
+
+                            {/* Esfera Contra (Sombra Terrena) */}
+                            <div className="flex flex-col items-center group relative cursor-pointer w-1/2">
+                               <p className="text-xs font-bold text-amber-500 mb-2">{proposal.optionB} ({proposal.votesB}%)</p>
+                               <div className="relative flex justify-center items-center h-24 w-full">
+                                  <motion.button 
+                                     onClick={(e) => {
+                                        const btn = e.currentTarget;
+                                        setVoteSuccess(proposal.id);
+                                        for(let i=0; i<40; i++) {
+                                           const p = document.createElement('div');
+                                           p.className = `fixed w-2 h-2 rounded-full pointer-events-none z-50 bg-amber-500`;
+                                           const rect = btn.getBoundingClientRect();
+                                           p.style.left = `${e.clientX}px`;
+                                           p.style.top = `${e.clientY}px`;
+                                           p.style.boxShadow = '0 0 15px #f59e0b';
+                                           document.body.appendChild(p);
+                                           const tx = (rect.left + rect.width / 2) - e.clientX + (Math.random() * 40 - 20);
+                                           const ty = (rect.top + rect.height / 2) - e.clientY + (Math.random() * 40 - 20);
+                                           p.animate([
+                                              { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                                              { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                                           ], { duration: 600 + Math.random() * 400, easing: 'ease-in' }).onfinish = () => p.remove();
+                                        }
+                                     }}
+                                     className="w-16 h-16 rounded-full bg-amber-600 relative z-10 hover:w-20 hover:h-20 transition-all duration-300"
+                                     style={{ scale: 0.8 + (proposal.votesB / 100) }}
+                                     animate={{ boxShadow: ['0 0 20px rgba(245,158,11,0.2)', '0 0 40px rgba(245,158,11,0.5)', '0 0 20px rgba(245,158,11,0.2)'] }}
+                                     transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+                                  >
+                                     <div className="absolute inset-0 bg-black/40 rounded-full blur-[2px] mix-blend-overlay" />
+                                     <div className="absolute inset-0 bg-amber-400/20 rounded-full animate-pulse opacity-40" />
+                                  </motion.button>
+                               </div>
+                               <button className="mt-4 px-4 py-1.5 bg-amber-900/20 hover:bg-amber-900/40 border border-amber-700/30 rounded-full text-amber-500 text-xs font-bold transition-colors">
+                                  Canalizar Terreno
+                               </button>
+                            </div>
+                         </div>
                       </div>
+                    ))}
+                  </div>
 
-                      {/* Progress Bar */}
-                      <div className="mb-6">
-                        <div className="flex justify-between text-xs font-semibold mb-2">
-                          <span className="text-gray-600 dark:text-green-300">{proposal.optionA} ({proposal.votesA}%)</span>
-                          <span className="text-gray-600 dark:text-green-300">{proposal.optionB} ({proposal.votesB}%)</span>
-                        </div>
-                        <div className="w-full h-3 bg-gray-200 dark:bg-green-900/30 rounded-full overflow-hidden flex">
-                          <div className="h-full bg-green-500 transition-all duration-1000" style={{ width: `${proposal.votesA}%` }}></div>
-                          <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${proposal.votesB}%` }}></div>
-                        </div>
-                      </div>
-
-                      {votingProposal === proposal.id ? (
-                        <motion.div 
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          className="pt-4 border-t border-gray-100 dark:border-green-900/30"
-                        >
-                          <p className="text-sm text-gray-600 dark:text-green-100/70 mb-3 font-semibold">Peso do Voto (Tokens SOS)</p>
-                          <input 
-                            type="range" 
-                            min="1" 
-                            max="100" 
-                            value={voteWeight} 
-                            onChange={(e) => setVoteWeight(parseInt(e.target.value))}
-                            className="w-full mb-4 accent-green-600 dark:accent-green-500"
-                          />
-                          <div className="flex justify-between text-xs font-mono text-gray-500 dark:text-green-400/80 mb-6">
-                             <span>1</span>
-                             <span>Peso atual: {voteWeight}0 SOS</span>
-                             <span>100</span>
-                          </div>
-                          <div className="flex gap-2">
-                             <button
-                               onClick={() => setVotingProposal(null)}
-                               className="flex-1 py-3 text-sm font-semibold rounded-xl bg-gray-100 dark:bg-[#0b1410] text-gray-600 dark:text-green-100/60 hover:bg-gray-200 dark:hover:bg-green-900/40 transition-colors"
-                             >
-                               Cancelar
-                             </button>
-                             <button
-                               onClick={() => handleVote(proposal.id)}
-                               className="flex-[2] py-3 text-sm font-semibold rounded-xl bg-green-600 text-white hover:bg-green-500 transition-colors shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
-                             >
-                               <CheckCircle2 className="w-4 h-4" /> Confirmar Voto
-                             </button>
-                          </div>
-                        </motion.div>
-                      ) : (
-                        <div className="pt-4 border-t border-gray-100 dark:border-green-900/30 flex justify-end">
-                           <button
-                             onClick={() => setVotingProposal(proposal.id)}
-                             className="px-5 py-2.5 rounded-full bg-[#0b1410] hover:bg-gray-900 dark:bg-green-900/50 dark:hover:bg-green-800 text-white dark:text-green-300 font-semibold text-sm transition-all shadow-sm flex items-center gap-2"
-                           >
-                              Votar na Proposta <ChevronRight className="w-4 h-4" />
-                           </button>
-                        </div>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-
-              </div>
+               </div>
             </motion.div>
           )}
 
@@ -1511,31 +1791,869 @@ export function GuardianDashboard({ walletAddress }: GuardianDashboardProps) {
             </motion.div>
           )}
 
+          {activeTab === 'raiz' && (
+            <motion.div
+              key="raiz"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
+            >
+              <div className="bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30 relative overflow-hidden">
+                <div className="flex items-center gap-3 mb-10 relative z-10">
+                   <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-inner">
+                     <Activity className="w-6 h-6" />
+                   </div>
+                   <div>
+                     <h3 className="text-2xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight">A Raiz da Verdade</h3>
+                     <p className="text-sm text-gray-500 dark:text-emerald-100/60 mt-1">Histórico vivo de transações gravadas permanentemente em Algorand.</p>
+                   </div>
+                </div>
+
+                <div className="relative pl-8 pb-8">
+                   {/* Central glowing line */}
+                   <div className="absolute left-[39px] top-0 bottom-0 w-1 rounded-full bg-gradient-to-b from-emerald-500 via-emerald-700 to-transparent"></div>
+
+                   {/* Transactions Nodes */}
+                   <div className="space-y-10 relative z-10">
+                     {[
+                        { date: 'Agora Mesmo', title: 'Energia Canalizada', amount: '+150 O2', type: 'reward', desc: 'Resgate de Flora Ativa no Farol da Esperança', isNew: true },
+                        { date: 'Há 2 dias', title: 'Semente Ancestral #01', amount: '-200 SOS', type: 'nft', desc: 'Mint da muda Hevea brasiliensis', hash: 'TXN_A8F9...3B12', isNew: false },
+                        { date: 'Há 5 dias', title: 'Voto no Conselho', amount: '-10 SOS', type: 'dao', desc: 'Apoio à Expansão para o Sudeste Asiático', hash: 'TXN_C4D2...9E71', isNew: false },
+                        { date: 'Há 1 semana', title: 'Swap Efetuado', amount: '+1,500 SOS', type: 'swap', desc: 'Conversão de 1 ALGO para Energia Vital', hash: 'TXN_F1A2...4C98', isNew: false },
+                     ].map((txn, idx) => (
+                        <motion.div 
+                           key={idx}
+                           initial={{ opacity: 0, x: -20 }}
+                           animate={{ opacity: 1, x: 0 }}
+                           transition={{ delay: idx * 0.15 + 0.3 }}
+                           className="relative"
+                        >
+                           {/* The Node */}
+                           <div className={cn(
+                             "absolute -left-[45px] top-2 w-6 h-6 rounded-full border-4 border-[#111f18] transition-all cursor-pointer group flex items-center justify-center",
+                             txn.isNew ? "bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.8)]" : "bg-emerald-800"
+                           )}>
+                             {txn.isNew && <div className="absolute w-full h-full bg-emerald-400 rounded-full animate-ping opacity-50" />}
+                             <div className="w-1 h-1 bg-[#111f18] rounded-full"></div>
+                           </div>
+
+                           {/* Content Card */}
+                           <div className={cn(
+                             "bg-[#0b1410]/80 backdrop-blur-md rounded-2xl p-5 border transition-all hover:border-emerald-500/50 group relative overflow-hidden",
+                             txn.isNew ? "border-emerald-500/40" : "border-emerald-900/30"
+                           )}>
+                              {txn.isNew && <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent pointer-events-none" />}
+                              
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                                <div className="flex items-center gap-3">
+                                  <h4 className={cn("text-lg font-bold tracking-tight", txn.isNew ? "text-emerald-50" : "text-emerald-100/80")}>{txn.title}</h4>
+                                  <span className="text-xs font-mono text-emerald-600 dark:text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">{txn.date}</span>
+                                </div>
+                                <div className={cn("font-mono font-bold text-lg", txn.amount.startsWith('+') ? "text-green-400" : "text-amber-500")}>
+                                  {txn.amount}
+                                </div>
+                              </div>
+                              <p className="text-sm text-emerald-100/60 mb-3">{txn.desc}</p>
+                              
+                              {txn.hash && (
+                                <motion.div 
+                                  className="mt-3 cursor-pointer overflow-hidden rounded-xl border border-amber-500/20 bg-amber-900/10 flex items-center justify-between p-1 pr-2"
+                                  whileHover={{ scale: 1.01 }}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <div className="bg-amber-500/20 text-amber-500 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                                      <Lock className="w-3 h-3" /> Hash
+                                    </div>
+                                    <span className="text-amber-200/80 font-mono text-sm">{txn.hash}</span>
+                                  </div>
+                                  <ChevronRight className="w-4 h-4 text-amber-500/50" />
+                                </motion.div>
+                              )}
+                           </div>
+                        </motion.div>
+                     ))}
+                   </div>
+                </div>
+
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'bazar' && (
+            <motion.div
+              key="bazar"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
+            >
+              <div className="bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30 relative overflow-hidden">
+                <div className="flex items-center gap-3 mb-10 relative z-10">
+                   <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-inner">
+                     <Sparkles className="w-6 h-6" />
+                   </div>
+                   <div>
+                     <h3 className="text-2xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight">O Bazar Simbiótico</h3>
+                     <p className="text-sm text-gray-500 dark:text-emerald-100/60 mt-1">Mercado de Regeneração Real. Converta sua energia em impacto físico estrutural.</p>
+                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                   {[
+                     { id: 'animal', title: 'Apadrinhamento de Animal Silvestre', desc: 'Garanta mantimentos e cuidados veterinários para fauna resgatada.', img: 'https://images.unsplash.com/photo-1564750058862-23c8e5454b03?auto=format&fit=crop&q=80&w=400', cost: '5,000 SOS', tag: 'Certificado On-Chain' },
+                     { id: 'nft', title: 'Arte Nativa NFT: Espírito da Onça', desc: 'Arte digital exclusiva forjada por comunidades ribeirinhas. Desbloqueia status Ancião.', img: 'https://images.unsplash.com/photo-1621451537084-482c73073e0f?auto=format&fit=crop&q=80&w=400', cost: '12,000 SOS', tag: 'Arte Nativa' },
+                     { id: 'seeds', title: 'Kit de Sementes Ancestrais', desc: 'Cesta enviada para sua casa. Plante na sua localidade e expanda a floresta.', img: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=400', cost: '8,000 SOS', tag: 'Produto Sustentável' }
+                   ].map((item) => (
+                      <div key={item.id} className="relative group rounded-3xl overflow-hidden bg-[#0A100D] border border-emerald-900/30 hover:border-emerald-500/50 transition-all duration-500">
+                         {/* Card Image */}
+                         <div className="relative h-48 w-full overflow-hidden">
+                           <div className="absolute inset-0 bg-gradient-to-t from-[#0A100D] via-transparent to-transparent z-10" />
+                           <img src={item.img} alt={item.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
+                           <div className="absolute top-4 right-4 z-20 bg-emerald-900/80 backdrop-blur-md text-emerald-300 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/30">
+                             {item.tag}
+                           </div>
+                         </div>
+                         
+                         <div className="p-6 relative z-20">
+                           <h4 className="text-lg font-bold text-emerald-50 tracking-tight leading-tight mb-2">{item.title}</h4>
+                           <p className="text-sm text-emerald-100/60 mb-6 line-clamp-2">{item.desc}</p>
+                           
+                           <div className="flex items-center justify-between">
+                             <div className="flex flex-col">
+                               <span className="text-[10px] text-emerald-500/80 uppercase font-bold tracking-widest">Custo de Ignição</span>
+                               <span className="text-emerald-400 font-mono font-bold">{item.cost}</span>
+                             </div>
+                             
+                             <button
+                               onClick={(e) => {
+                                 handleIncinerate(item.id);
+                                 const btn = e.currentTarget;
+                                 for(let i=0; i<30; i++) {
+                                    const p = document.createElement('div');
+                                    p.className = `fixed w-2 h-2 rounded-full pointer-events-none z-50 ${Math.random() > 0.5 ? 'bg-amber-400' : 'bg-emerald-400'}`;
+                                    const rect = btn.getBoundingClientRect();
+                                    p.style.left = `${rect.left + rect.width / 2}px`;
+                                    p.style.top = `${rect.top + rect.height / 2}px`;
+                                    p.style.boxShadow = '0 0 10px currentColor';
+                                    document.body.appendChild(p);
+                                    const angle = Math.random() * Math.PI * 2;
+                                    const velocity = 30 + Math.random() * 80;
+                                    const tx = Math.cos(angle) * velocity;
+                                    const ty = Math.sin(angle) * velocity - 40;
+                                    p.animate([
+                                       { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                                       { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                                    ], { duration: 600 + Math.random() * 400, easing: 'ease-out' }).onfinish = () => p.remove();
+                                 }
+                               }}
+                               disabled={incineratingCard === item.id}
+                               className="relative bg-emerald-950 hover:bg-emerald-800 border border-emerald-600/40 text-emerald-300 font-bold px-4 py-2 rounded-xl transition-all overflow-hidden"
+                             >
+                               {incineratingCard === item.id ? (
+                                  <span className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-amber-400 animate-spin" /> Forjando...</span>
+                               ) : (
+                                  <span className="flex items-center gap-2 relative z-10"><Sparkles className="w-4 h-4" /> Forjar Troca</span>
+                               )}
+                               
+                               {/* Particle Magic when incinerating */}
+                               <AnimatePresence>
+                                  {incineratingCard === item.id && (
+                                     <motion.div 
+                                       initial={{ opacity: 1 }}
+                                       exit={{ opacity: 0 }}
+                                       className="absolute inset-0 pointer-events-none"
+                                     >
+                                        {[...Array(6)].map((_, i) => (
+                                          <motion.div
+                                            key={i}
+                                            className="absolute w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"
+                                            initial={{ top: '50%', left: '50%', opacity: 1, scale: 1 }}
+                                            animate={{ 
+                                              top: `${-50 - Math.random() * 50}%`, 
+                                              left: `${10 + Math.random() * 80}%`,
+                                              opacity: 0,
+                                              scale: 0
+                                            }}
+                                            transition={{ duration: 0.8 + Math.random() * 0.5, ease: "easeOut" }}
+                                          />
+                                        ))}
+                                        <div className="absolute inset-0 bg-emerald-400/20 animate-pulse mix-blend-overlay" />
+                                     </motion.div>
+                                  )}
+                               </AnimatePresence>
+                             </button>
+                           </div>
+                         </div>
+                      </div>
+                   ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'ponte' && (
+            <motion.div
+              key="ponte"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
+            >
+               <div className="bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30 relative overflow-hidden flex flex-col items-center justify-center min-h-[500px]">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-[#0b1410] to-[#0b1410] z-[-1] pointer-events-none" />
+                  
+                  <div className="text-center mb-10 relative z-10 w-full max-w-lg mx-auto mt-4">
+                    <h3 className="text-3xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight flex items-center justify-center gap-3">
+                      <Link className="w-8 h-8 text-emerald-400" /> A Ponte Cósmica
+                    </h3>
+                    <p className="text-gray-500 dark:text-emerald-100/60 mt-2">Atravesse o véu das redes. Traga sua energia de outras cadeias para fortalecer o eixo de SOSPlanet.</p>
+                  </div>
+
+                  {/* VORTEX */}
+                  <div className="relative w-64 h-64 flex items-center justify-center mb-12">
+                     <motion.div 
+                       className="absolute w-full h-full rounded-full border-t-2 border-emerald-500/50"
+                       animate={{ rotate: 360, scale: [1, 1.1, 1] }} 
+                       transition={{ duration: 3, repeat: Infinity, ease: "linear" }} 
+                     />
+                     <motion.div 
+                       className="absolute w-4/5 h-4/5 rounded-full border-b-2 border-green-400/50"
+                       animate={{ rotate: -360, scale: [1, 1.2, 1] }} 
+                       transition={{ duration: 4, repeat: Infinity, ease: "linear" }} 
+                     />
+                     <motion.div 
+                       className="absolute w-3/5 h-3/5 rounded-full bg-gradient-to-tr from-emerald-500/30 to-teal-500/30 blur-md"
+                       animate={{ rotate: 360, scale: [1, 0.8, 1] }} 
+                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} 
+                     />
+                     <div className="w-16 h-16 bg-black rounded-full shadow-[0_0_50px_rgba(52,211,153,1)] z-10 flex items-center justify-center relative overflow-hidden">
+                        <AnimatePresence>
+                           {isMigratingVortex && (
+                              <motion.div 
+                                className="absolute inset-0 bg-emerald-400 mix-blend-screen"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: [0, 1, 0] }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 1 }}
+                              />
+                           )}
+                        </AnimatePresence>
+                     </div>
+                     
+                     <AnimatePresence>
+                       {isMigratingVortex && (
+                          <div className="absolute inset-0 pointer-events-none">
+                             {[...Array(12)].map((_, i) => (
+                               <motion.div
+                                 key={`vortex-p-${i}`}
+                                 className="absolute w-2 h-2 rounded-full bg-white shadow-[0_0_10px_#fff]"
+                                 initial={{ 
+                                   top: `${Math.random() * 100}%`, 
+                                   left: `${Math.random() * 100}%`, 
+                                   opacity: 0,
+                                   scale: 0.5
+                                 }}
+                                 animate={{ 
+                                   top: '50%',
+                                   left: '50%',
+                                   opacity: [0, 1, 0],
+                                   scale: [0.5, 1.5, 0]
+                                 }}
+                                 transition={{ 
+                                   duration: 1.5, 
+                                   ease: "circIn",
+                                   delay: Math.random() * 0.5
+                                 }}
+                               />
+                             ))}
+                          </div>
+                       )}
+                     </AnimatePresence>
+                  </div>
+
+                  <div className="flex bg-[#0b1410] border border-emerald-900/50 p-2 rounded-2xl gap-2 w-full max-w-sm mb-8 relative z-10">
+                     <select className="bg-transparent text-emerald-100 font-medium py-3 px-4 border-none outline-none w-1/3 text-center appearance-none cursor-pointer">
+                        <option>ETH</option>
+                        <option>SOL</option>
+                        <option>MATIC</option>
+                     </select>
+                     <div className="w-px bg-emerald-900/50" />
+                     <input type="text" placeholder="0.0" className="bg-transparent flex-1 text-right text-emerald-50 font-mono font-bold text-lg outline-none pr-4" />
+                  </div>
+
+                  <button 
+                    onClick={() => {
+                       setIsMigratingVortex(true);
+                       setTimeout(() => setIsMigratingVortex(false), 2000);
+                    }}
+                    disabled={isMigratingVortex}
+                    className="relative group bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-lg px-8 py-4 rounded-full transition-all overflow-hidden z-10 shadow-[0_0_30px_rgba(5,150,105,0.4)] hover:shadow-[0_0_50px_rgba(5,150,105,0.6)]"
+                  >
+                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                     {isMigratingVortex ? 'Transmutando...' : 'Migrar Moedas'}
+                  </button>
+               </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'ninho' && (
+            <motion.div
+              key="ninho"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
+            >
+               <div className="bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30 overflow-hidden relative min-h-[500px]">
+                  <div className="text-center mb-12 relative z-10">
+                    <h3 className="text-3xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight flex items-center justify-center gap-3">
+                      <Sprout className="w-8 h-8 text-emerald-400" /> O Ninho da Renovação
+                    </h3>
+                    <p className="text-gray-500 dark:text-emerald-100/60 mt-2">Incubadora Descentralizada. Regue as sementes que transformarão o amanhã.</p>
+                  </div>
+
+                  {/* Seed Carousel */}
+                  <div className="relative h-80 flex items-center justify-center py-10 perspective-[1000px] pointer-events-none mt-16">
+                     <div className="absolute w-full flex justify-center pointer-events-auto h-full items-center">
+                        {[
+                          { title: 'Drones Semeadores', author: '@EcoNerd', desc: 'Flotilha automatizada de semeadura em encostas de difícil acesso no cerrado.', goal: '50k SOS' },
+                          { title: 'Filtros Solares', author: '@AquaViva', desc: 'Purificação acessível para 5 comunidades ribeirinhas.', goal: '30k SOS' },
+                          { title: 'Painéis Vivos', author: '@BioHack', desc: 'Paredes cobertas de musgo modificado para absorver 10x mais CO2.', goal: '80k SOS' }
+                        ].map((seed, idx) => {
+                           const offset = idx - ninhoIndex;
+                           const isActive = offset === 0;
+                           const xPos = offset * 250;
+                           const scale = isActive ? 1.1 : 0.8;
+                           const zPos = isActive ? 0 : -200;
+                           const opacity = isActive ? 1 : 0.4;
+
+                           return (
+                             <motion.div 
+                               key={idx}
+                               animate={{ x: xPos, scale, z: zPos, opacity, rotateY: offset * -15 }}
+                               transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                               className="absolute w-72 h-[260px] bg-[#0A100D]/90 backdrop-blur-xl border border-emerald-500/30 rounded-3xl p-6 shadow-2xl cursor-pointer flex flex-col"
+                               style={{ transformStyle: 'preserve-3d' }}
+                               onClick={() => setNinhoIndex(idx)}
+                             >
+                                <div className="w-12 h-12 bg-emerald-900/40 rounded-full flex items-center justify-center mb-4 border border-emerald-500/50 text-emerald-400">
+                                  <Leaf className="w-6 h-6" />
+                                </div>
+                                <h4 className="text-lg font-bold text-emerald-50 mb-1">{seed.title}</h4>
+                                <span className="text-xs text-emerald-400 font-mono mb-4 block">{seed.author}</span>
+                                <p className="text-sm text-emerald-100/60 leading-tight mb-6 flex-1 overflow-hidden">{seed.desc}</p>
+                                <div className="flex justify-between items-end border-t border-emerald-900/50 pt-4 mt-auto">
+                                  <div>
+                                    <span className="text-[10px] uppercase tracking-widest text-emerald-500 block mb-1">Meta</span>
+                                    <span className="font-mono text-emerald-50 font-bold">{seed.goal}</span>
+                                  </div>
+                                  <button className={cn(
+                                    "px-4 py-2 font-bold transition-all border rounded-xl",
+                                    isActive ? "bg-emerald-500 text-white border-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.5)] scale-110 -translate-y-1" : "bg-transparent text-emerald-500 border-emerald-500/30 scale-90 opacity-0"
+                                  )}>
+                                    Regar
+                                  </button>
+                                </div>
+                             </motion.div>
+                           )
+                        })}
+                     </div>
+                  </div>
+                  
+                  {/* Prev/Next overlay clicks */}
+                  <div className="absolute inset-y-0 left-0 w-1/4 z-10 cursor-pointer" onClick={() => setNinhoIndex(prev => Math.max(0, prev - 1))} />
+                  <div className="absolute inset-y-0 right-0 w-1/4 z-10 cursor-pointer" onClick={() => setNinhoIndex(prev => Math.min(2, prev + 1))} />
+               </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'espelho' && (
+            <motion.div
+              key="espelho"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-6"
+            >
+               <div className="bg-white/80 dark:bg-[#07130c]/90 backdrop-blur-xl rounded-3xl p-8 border border-gray-100 dark:border-emerald-900/30 overflow-hidden relative min-h-[500px]">
+                  <div className="text-center mb-16 relative z-10">
+                    <h3 className="text-3xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight flex items-center justify-center gap-3">
+                      <Droplets className="w-8 h-8 text-blue-400" /> O Espelho d'Água
+                    </h3>
+                    <p className="text-gray-500 dark:text-blue-100/60 mt-2">Transparência vital. Observe o fluxo da energia nutrindo todo o ecossistema.</p>
+                  </div>
+
+                  <div className="relative w-full max-w-4xl mx-auto h-[400px] flex items-center justify-center mt-10">
+                     {/* Fonte Central */}
+                     <motion.div 
+                       className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 rounded-full bg-gradient-to-b from-blue-400 to-emerald-400 flex items-center justify-center shadow-[0_0_40px_rgba(56,189,248,0.4)] z-20"
+                       animate={{ boxShadow: ['0 0 20px rgba(56,189,248,0.4)', '0 0 60px rgba(56,189,248,0.8)', '0 0 20px rgba(56,189,248,0.4)'] }}
+                       transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                     >
+                       <div className="w-20 h-20 rounded-full bg-[#07130c] flex items-center justify-center border-4 border-blue-500/30">
+                         <span className="text-white font-bold text-sm text-center leading-tight">Tesouraria<br/>SOS</span>
+                       </div>
+                     </motion.div>
+
+                     {/* SVG Curves */}
+                     <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 400" preserveAspectRatio="none">
+                        {/* Reflorestamento (50%) */}
+                        <path id="path-reflorest" d="M400,80 C400,200 150,200 150,300" fill="none" stroke="url(#blue-green)" strokeWidth="6" className="opacity-30" />
+                        <motion.path 
+                           d="M400,80 C400,200 150,200 150,300" fill="none" stroke="url(#blue-green)" strokeWidth="8" strokeLinecap="round" strokeDasharray="20 40"
+                           animate={{ strokeDashoffset: -100 }}
+                           transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        />
+                        
+                        {/* Liquidez (30%) */}
+                        <path id="path-liq" d="M400,80 C400,200 400,200 400,300" fill="none" stroke="url(#blue-blue)" strokeWidth="4" className="opacity-30" />
+                        <motion.path 
+                           d="M400,80 C400,200 400,200 400,300" fill="none" stroke="url(#blue-blue)" strokeWidth="6" strokeLinecap="round" strokeDasharray="15 30"
+                           animate={{ strokeDashoffset: -100 }}
+                           transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                        />
+                        
+                        {/* Inovação (20%) */}
+                        <path id="path-inov" d="M400,80 C400,200 650,200 650,300" fill="none" stroke="url(#blue-purple)" strokeWidth="3" className="opacity-30" />
+                        <motion.path 
+                           d="M400,80 C400,200 650,200 650,300" fill="none" stroke="url(#blue-purple)" strokeWidth="4" strokeLinecap="round" strokeDasharray="10 20"
+                           animate={{ strokeDashoffset: -100 }}
+                           transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                        />
+
+                        <defs>
+                          <linearGradient id="blue-green" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#38bdf8" />
+                            <stop offset="100%" stopColor="#34d399" />
+                          </linearGradient>
+                          <linearGradient id="blue-blue" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#38bdf8" />
+                            <stop offset="100%" stopColor="#60a5fa" />
+                          </linearGradient>
+                          <linearGradient id="blue-purple" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#38bdf8" />
+                            <stop offset="100%" stopColor="#a78bfa" />
+                          </linearGradient>
+                        </defs>
+                     </svg>
+
+                     {/* Destinations */}
+                     <div className="absolute top-[300px] left-[150px] -translate-x-1/2 -translate-y-1/2 group">
+                        <div className="bg-emerald-900/60 border border-emerald-500/50 backdrop-blur-md rounded-2xl p-4 w-40 text-center shadow-lg transition-transform group-hover:scale-110 relative z-20">
+                           <Trees className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+                           <h5 className="text-emerald-50 font-bold mb-1">Reflorestamento</h5>
+                           <p className="text-emerald-400 font-mono text-sm">50%</p>
+                           <div className="absolute inset-0 bg-emerald-400/0 group-hover:bg-emerald-400/10 transition-colors rounded-2xl pointer-events-none" />
+                        </div>
+                     </div>
+
+                     <div className="absolute top-[300px] left-[400px] -translate-x-1/2 -translate-y-1/2 group">
+                        <div className="bg-blue-900/60 border border-blue-500/50 backdrop-blur-md rounded-2xl p-4 w-40 text-center shadow-lg transition-transform group-hover:scale-110 relative z-20">
+                           <RefreshCcw className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+                           <h5 className="text-blue-50 font-bold mb-1">Liquidez SOS</h5>
+                           <p className="text-blue-400 font-mono text-sm">30%</p>
+                           <div className="absolute inset-0 bg-blue-400/0 group-hover:bg-blue-400/10 transition-colors rounded-2xl pointer-events-none" />
+                        </div>
+                     </div>
+
+                     <div className="absolute top-[300px] left-[650px] -translate-x-1/2 -translate-y-1/2 group">
+                        <div className="bg-purple-900/60 border border-purple-500/50 backdrop-blur-md rounded-2xl p-4 w-40 text-center shadow-lg transition-transform group-hover:scale-110 relative z-20">
+                           <Atom className="w-6 h-6 text-purple-400 mx-auto mb-2" />
+                           <h5 className="text-purple-50 font-bold mb-1">Inovação Beta</h5>
+                           <p className="text-purple-400 font-mono text-sm">20%</p>
+                           <div className="absolute inset-0 bg-purple-400/0 group-hover:bg-purple-400/10 transition-colors rounded-2xl pointer-events-none" />
+                        </div>
+                     </div>
+
+                  </div>
+               </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'trilha' && (
+            <motion.div
+              key="trilha"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-6"
+            >
+               <div className="bg-[#0b1410] rounded-3xl p-8 border border-emerald-900/40 relative overflow-hidden flex flex-col items-center">
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 pointer-events-none" />
+                  
+                  <div className="text-center mb-10 relative z-10 w-full max-w-lg mx-auto">
+                    <h3 className="text-3xl font-bold text-emerald-50 tracking-tight flex items-center justify-center gap-3">
+                      <MapPin className="w-8 h-8 text-emerald-400" /> A Trilha do Despertar
+                    </h3>
+                    <p className="text-emerald-100/60 mt-2">Sua jornada de evolução ecológica. Cada passo enraíza o seu legado e a sua alma.</p>
+                  </div>
+
+                  <div className="relative w-full max-w-sm mx-auto h-[600px] flex flex-col items-center justify-between py-10">
+                     {/* Conexão Vertical (Tronco/Rail) */}
+                     <div className="absolute top-10 bottom-10 left-1/2 -translate-x-1/2 w-1.5 bg-gray-800 rounded-full" />
+                     <div className="absolute top-10 bottom-1/2 left-1/2 -translate-x-1/2 w-2 bg-gradient-to-t from-emerald-600 via-emerald-400 to-emerald-300 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.8)]" />
+                     
+                     {[
+                        { level: 5, id: 'anciao', title: 'Ancião de Gaia', icon: Crown, status: 'locked', desc: 'Conquista a governança máxima e aura onipresente.' },
+                        { level: 4, id: 'arvore', title: 'Árvore Sábia', icon: Trees, status: 'locked', desc: 'Produz sementes nativas e abriga projetos massivos.' },
+                        { level: 3, id: 'tronco', title: 'Tronco Jovem', icon: Activity, status: 'unlocked', desc: 'Estabelece propostas no Conselho de Guardiões.' },
+                        { level: 2, id: 'broto', title: 'Broto Desperto', icon: Sprout, status: 'unlocked', desc: 'Primeiras raízes cravadas no solo. Voto simples.' },
+                        { level: 1, id: 'semente', title: 'Semente Dormida', icon: Leaf, status: 'unlocked', desc: 'Chegada ao ecossistema. Primeira respiração digital.' },
+                     ].map((node, i) => (
+                        <div key={node.id} className="relative z-10 flex flex-col items-center group w-full">
+                           <div className={cn(
+                             "w-16 h-16 rounded-full border-4 flex items-center justify-center transition-all cursor-pointer relative",
+                             node.status === 'unlocked' 
+                               ? "bg-emerald-900 border-emerald-400 text-emerald-300 shadow-[0_0_20px_rgba(52,211,153,0.5)] group-hover:scale-110" 
+                               : "bg-gray-900 border-gray-700 text-gray-600"
+                           )}>
+                             {node.status === 'unlocked' && <div className="absolute inset-0 rounded-full bg-emerald-400/20 animate-ping" />}
+                             <node.icon className="w-6 h-6" />
+                           </div>
+                           
+                           {/* Holographic Tooltip */}
+                           <div className="absolute left-[calc(50%+2.5rem)] top-1/2 -translate-y-1/2 ml-4 w-48 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                              <div className={cn(
+                                "p-3 rounded-xl backdrop-blur-md border shadow-xl", 
+                                node.status === 'unlocked' ? "bg-emerald-900/80 border-emerald-500/50" : "bg-gray-900/80 border-gray-700/50"
+                              )}>
+                                 <h5 className={cn("font-bold text-sm mb-1", node.status === 'unlocked' ? "text-emerald-50" : "text-gray-400")}>{node.title}</h5>
+                                 <p className={cn("text-xs", node.status === 'unlocked' ? "text-emerald-200/80" : "text-gray-500")}>{node.desc}</p>
+                              </div>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'altar' && (
+            <motion.div
+              key="altar"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
+            >
+              <div className="bg-white/80 dark:bg-[#0b1410]/80 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-emerald-900/30 overflow-hidden relative min-h-[500px] flex flex-col items-center justify-center">
+                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/40 via-[#0b1410] to-[#0b1410] pointer-events-none" />
+                 
+                 <div className="text-center z-10 mb-10">
+                   <h3 className="text-3xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight flex items-center justify-center gap-3">
+                     <Flame className="w-8 h-8 text-emerald-400" /> O Altar de Transmutação
+                   </h3>
+                   <p className="text-gray-500 dark:text-emerald-100/60 mt-2 max-w-lg mx-auto">Sua energia vital (SOS) está enraizada no ecossistema. Observe a Seiva da Floresta se acumular com o tempo e colha os frutos da sua resiliência.</p>
+                 </div>
+
+                 <div className="relative z-10 w-full max-w-sm mx-auto flex flex-col items-center">
+                    {/* Glowing drops falling */}
+                    <div className="relative w-full h-32 flex justify-center overflow-hidden">
+                       {Array.from({ length: 5 }).map((_, i) => (
+                          <motion.div
+                             key={i}
+                             className="absolute w-1.5 h-4 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.8)]"
+                             initial={{ y: -50, opacity: 0 }}
+                             animate={{ y: 200, opacity: [0, 1, 0] }}
+                             transition={{ duration: 2 + Math.random(), repeat: Infinity, delay: Math.random() * 2, ease: 'easeIn' }}
+                             style={{ left: `calc(50% + ${Math.random() * 40 - 20}px)` }}
+                          />
+                       ))}
+                    </div>
+
+                    {/* Lótus / Frasco de Cristal em SVG */}
+                    <div className="relative w-48 h-48 mt-[-20px]">
+                       <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+                          {/* Lótus Base */}
+                          <path d="M50 90 Q 75 90 85 60 Q 65 80 50 85 Q 35 80 15 60 Q 25 90 50 90 Z" fill="rgba(6,78,59,0.5)" stroke="#34d399" strokeWidth="1" />
+                          <path d="M50 85 Q 70 70 80 40 Q 60 60 50 75 Q 40 60 20 40 Q 30 70 50 85 Z" fill="rgba(6,78,59,0.7)" stroke="#34d399" strokeWidth="1" />
+                          <path d="M50 75 Q 65 50 70 20 Q 55 45 50 60 Q 45 45 30 20 Q 35 50 50 75 Z" fill="rgba(6,78,59,0.9)" stroke="#34d399" strokeWidth="1" />
+                          
+                          {/* Liquido Brilhante (Néctar/Seiva) */}
+                          <g style={{ transform: `scaleY(${altarNectar / 100})`, transformOrigin: 'bottom', transition: 'transform 1s ease-out' }}>
+                             <path d="M50 80 Q 60 60 70 30 Q 55 45 50 55 Q 45 45 30 30 Q 40 60 50 80 Z" fill="url(#nectarGrad)" className="mix-blend-screen" />
+                          </g>
+
+                          <defs>
+                            <linearGradient id="nectarGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor="#6ee7b7" stopOpacity="0.8" />
+                              <stop offset="100%" stopColor="#059669" stopOpacity="0.9" />
+                            </linearGradient>
+                          </defs>
+                       </svg>
+                       <div className="absolute inset-x-0 bottom-10 flex justify-center pointer-events-none">
+                          <span className="text-emerald-300 font-mono font-bold text-lg drop-shadow-md">{altarNectar.toFixed(2)} SOS</span>
+                       </div>
+                    </div>
+
+                    <button 
+                       onClick={(e) => {
+                          if(altarNectar === 0) return;
+                          setIsHarvestingAltar(true);
+                          const btn = e.currentTarget;
+                          for(let i=0; i<40; i++) {
+                             const p = document.createElement('div');
+                             p.className = `fixed w-2 h-2 rounded-full pointer-events-none z-[100] bg-emerald-300`;
+                             const rect = btn.getBoundingClientRect();
+                             p.style.left = `${rect.left + rect.width / 2}px`;
+                             p.style.top = `${rect.top}px`;
+                             p.style.boxShadow = '0 0 15px #34d399';
+                             document.body.appendChild(p);
+                             const angle = Math.random() * Math.PI * 2;
+                             const velocity = Math.random() * 100 + 50;
+                             const tx = Math.cos(angle) * velocity;
+                             const ty = Math.sin(angle) * velocity - 100;
+                             p.animate([
+                                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                                { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                             ], { duration: 800 + Math.random() * 400, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' }).onfinish = () => p.remove();
+                          }
+                          setTimeout(() => {
+                             setAltarNectar(0);
+                             setIsHarvestingAltar(false);
+                          }, 1000);
+                       }}
+                       disabled={isHarvestingAltar || altarNectar === 0}
+                       className="mt-8 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-emerald-950 font-bold rounded-full transition-all shadow-[0_0_30px_rgba(52,211,153,0.3)] hover:shadow-[0_0_50px_rgba(52,211,153,0.6)]"
+                    >
+                       {isHarvestingAltar ? 'Transmutando...' : 'Colher Seiva (Claim)'}
+                    </button>
+                 </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'bosque' && (
+            <motion.div
+              key="bosque"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
+            >
+              <div className="bg-[#050806] rounded-3xl overflow-hidden relative min-h-[600px] border border-emerald-900/20">
+                 {/* Estrelas de fundo */}
+                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 pointer-events-none mix-blend-screen" />
+                 
+                 <div className="absolute top-8 left-8 z-20">
+                   <h3 className="text-2xl font-bold text-emerald-50 tracking-tight flex items-center justify-start gap-3">
+                     <Network className="w-6 h-6 text-emerald-400" /> Bosque das Constelações
+                   </h3>
+                   <p className="text-emerald-100/50 mt-1 max-w-sm text-sm">O micélio global de heróis da plataforma. Passe o cursor para ver os Guardiões sincronizados.</p>
+                 </div>
+
+                 {/* Espaço de Constelações Parallax Mapeadas */}
+                 <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+                    <motion.div 
+                       className="relative w-full h-full pointer-events-auto"
+                       initial={{ opacity: 0 }}
+                       animate={{ opacity: 1 }}
+                       transition={{ duration: 1 }}
+                    >
+                       {/* Fios de micélio conectando nós aleatórios */}
+                       <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30">
+                          {bosqueNodes.slice(0, 20).map((node, i) => {
+                             const nextNode = bosqueNodes[(i + 1) % 20];
+                             return (
+                               <line 
+                                 key={`edge-${i}`}
+                                 x1={`${node.x}%`} 
+                                 y1={`${node.y}%`} 
+                                 x2={`${nextNode.x}%`} 
+                                 y2={`${nextNode.y}%`} 
+                                 stroke="#34d399" 
+                                 strokeWidth="0.5"
+                                 strokeDasharray="4 4"
+                               />
+                             )
+                          })}
+                       </svg>
+
+                       {/* Nós */}
+                       {bosqueNodes.map(node => (
+                          <motion.div
+                             key={node.id}
+                             onMouseEnter={() => setHoveredNode(node.id)}
+                             onMouseLeave={() => setHoveredNode(null)}
+                             className="absolute rounded-full cursor-url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 16 16%22><circle cx=%228%22 cy=%228%22 r=%224%22 fill=%22%2310b981%22/></svg>') 8 8, auto pointer-events-auto"
+                             style={{
+                                left: `${node.x}%`,
+                                top: `${node.y}%`,
+                                width: `${node.size * 10}px`,
+                                height: `${node.size * 10}px`,
+                             }}
+                             animate={{
+                                y: ['-2px', '2px', '-2px'],
+                                boxShadow: hoveredNode === node.id ? '0 0 20px #34d399' : '0 0 5px #047857'
+                             }}
+                             transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, ease: 'easeInOut' }}
+                          >
+                             <div className={cn("w-full h-full rounded-full bg-emerald-500", hoveredNode === node.id ? "opacity-100" : "opacity-60")} />
+                             
+                             {/* Tooltip on Hover */}
+                             <AnimatePresence>
+                               {hoveredNode === node.id && (
+                                  <motion.div 
+                                     initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                                     animate={{ opacity: 1, y: 0, scale: 1 }}
+                                     exit={{ opacity: 0, y: 10, scale: 0.9 }}
+                                     className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-emerald-950/90 border border-emerald-500/30 p-2 rounded-lg shadow-xl backdrop-blur-sm z-50 pointer-events-none"
+                                  >
+                                     <p className="text-emerald-50 text-xs font-mono font-bold mb-1">{node.address}</p>
+                                     <div className="flex items-center gap-1">
+                                        <Shield className="w-3 h-3 text-emerald-400" />
+                                        <span className="text-[10px] text-emerald-200 uppercase tracking-widest">Lvl {node.level}</span>
+                                     </div>
+                                  </motion.div>
+                               )}
+                             </AnimatePresence>
+                          </motion.div>
+                       ))}
+                    </motion.div>
+                 </div>
+              </div>
+            </motion.div>
+          )}
+
         </AnimatePresence>
 
-        {/* Sussurro da Floresta */}
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={whisperIdx}
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-40 max-w-sm pointer-events-none"
-          >
-             <div className="bg-white/90 dark:bg-[#111f18]/90 backdrop-blur-md border border-gray-200 dark:border-green-900/50 rounded-2xl p-4 shadow-xl shadow-green-900/10 flex items-start gap-4">
-               <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center shrink-0">
-                 <BellRing className="w-4 h-4 text-green-600 dark:text-green-400" />
-               </div>
-               <div>
-                 <p className="text-xs font-bold text-gray-400 dark:text-green-100/50 uppercase tracking-wider mb-1">O Sussurro da Floresta</p>
-                 <p className="text-sm font-medium text-gray-800 dark:text-green-100 leading-tight">
-                   {mockWhispers[whisperIdx]}
-                 </p>
-               </div>
-             </div>
-          </motion.div>
+        {/* A Voz de Gaia (Orquestrador) */}
+        <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-50 flex flex-col items-end">
+           <AnimatePresence>
+              {gaiaVoiceOpen && (
+                 <motion.div 
+                   initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                   animate={{ opacity: 1, y: 0, scale: 1 }}
+                   exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                   className="mb-4 w-80 md:w-96 bg-[#0b1410] border border-emerald-900/50 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl"
+                 >
+                    <div className="p-4 bg-emerald-900/20 border-b border-emerald-900/30 flex items-center justify-between">
+                       <h4 className="text-emerald-50 font-bold flex items-center gap-2">
+                         <Sparkles className="w-4 h-4 text-emerald-400" /> A Voz de Gaia
+                       </h4>
+                       <button onClick={() => { setGaiaVoiceOpen(false); setGaiaVoiceStatus('idle'); }} className="text-emerald-500 hover:text-emerald-300">
+                         <X className="w-5 h-5" />
+                       </button>
+                    </div>
+                    <div className="p-5 min-h-[150px] flex flex-col justify-end">
+                       {gaiaVoiceStatus === 'idle' && (
+                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+                             <p className="text-emerald-100/80 text-sm mb-4">Sinto sua presença, Guardião. O que a floresta deve sussurrar para você?</p>
+                             {[
+                               { id: 'q1', text: 'Qual a saúde da rede?' },
+                               { id: 'q2', text: 'Como evoluir minha semente?' },
+                               { id: 'q3', text: 'Fofocas da Floresta' }
+                             ].map(q => (
+                               <button 
+                                 key={q.id}
+                                 onClick={() => handleGaiaAsk(q.id)}
+                                 className="w-full text-left px-4 py-2 rounded-xl bg-emerald-900/30 hover:bg-emerald-800/50 text-emerald-300 text-sm border border-emerald-500/20 transition-all font-medium"
+                               >
+                                 {q.text}
+                               </button>
+                             ))}
+                          </motion.div>
+                       )}
+
+                       {gaiaVoiceStatus === 'thinking' && (
+                          <div className="flex flex-col items-center justify-center py-6">
+                             <motion.div 
+                               animate={{ rotate: 360, scale: [1, 1.2, 1] }} 
+                               transition={{ duration: 2, repeat: Infinity }}
+                               className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent mb-4"
+                             />
+                             <p className="text-emerald-400 text-xs font-mono animate-pulse">visualizando as raízes...</p>
+                          </div>
+                       )}
+
+                       {gaiaVoiceStatus === 'answered' && (
+                          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                             <p className="text-emerald-50 text-sm leading-relaxed">{gaiaAnswer}</p>
+                             <button 
+                               onClick={() => setGaiaVoiceStatus('idle')}
+                               className="text-emerald-500 text-xs hover:text-emerald-300 underline underline-offset-4"
+                             >
+                               Perguntar outra coisa
+                             </button>
+                          </motion.div>
+                       )}
+                    </div>
+                 </motion.div>
+              )}
+           </AnimatePresence>
+
+           <button 
+             onClick={() => setGaiaVoiceOpen(!gaiaVoiceOpen)}
+             className={cn(
+               "w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all relative overflow-hidden group",
+               gaiaVoiceOpen ? "bg-emerald-600" : "bg-[#0b1410] border border-emerald-500/50 hover:bg-emerald-950"
+             )}
+           >
+              <div className="absolute inset-0 bg-emerald-400/20 rounded-full animate-ping opacity-0 group-hover:opacity-100" />
+              <Wind className={cn("w-6 h-6", gaiaVoiceOpen ? "text-emerald-50" : "text-emerald-400")} />
+           </button>
+        </div>
+
+        {/* Fireflies (O Coro da Floresta) */}
+        <AnimatePresence>
+          {fireflies.map(ff => (
+             <motion.div
+               key={ff.id}
+               initial={{ opacity: 0, top: '100vh', left: `${ff.xPos}vw`, scale: 0.5 }}
+               animate={{ 
+                 opacity: [0, 1, 1, 0], 
+                 top: '-10vh',
+                 left: [
+                   `${ff.xPos}vw`, 
+                   `${ff.xPos + 5}vw`, 
+                   `${ff.xPos - 5}vw`, 
+                   `${ff.xPos + 2}vw`
+                 ],
+               }}
+               exit={{ opacity: 0, scale: 0 }}
+               transition={{ duration: 12, ease: "easeInOut" }}
+               className="fixed z-50 pointer-events-none flex items-center gap-2"
+             >
+                <div className="px-4 py-2 rounded-full bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 text-emerald-100/90 text-sm font-medium shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+                  {ff.text}
+                </div>
+                <div className="w-2 h-2 rounded-full bg-emerald-300 animate-ping shadow-[0_0_10px_#6ee7b7]" />
+             </motion.div>
+          ))}
         </AnimatePresence>
+
+        {/* Coro da Floresta Input */}
+        <div className="fixed bottom-6 left-6 md:bottom-10 md:left-10 z-40 max-w-xs">
+           <form onSubmit={handleSendFirefly} className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-gray-500 dark:text-emerald-100/50 uppercase tracking-widest pl-2">O Coro da Floresta</label>
+              <div className="flex bg-white/90 dark:bg-[#111f18]/90 backdrop-blur-md border border-gray-200 dark:border-green-900/50 rounded-full p-1.5 shadow-xl shadow-green-900/10">
+                 <input 
+                   type="text" 
+                   value={coroInput}
+                   onChange={e => setCoroInput(e.target.value)}
+                   placeholder="Sopre sua intenção..."
+                   maxLength={60}
+                   className="bg-transparent border-none outline-none text-sm px-3 text-gray-800 dark:text-emerald-50 placeholder-gray-400 dark:placeholder-emerald-800/50 w-full min-w-[200px]"
+                 />
+                 <button 
+                   type="submit"
+                   disabled={!coroInput.trim()}
+                   className="w-8 h-8 shrink-0 rounded-full bg-emerald-100 dark:bg-emerald-900/40 hover:bg-emerald-200 dark:hover:bg-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 transition-colors disabled:opacity-50"
+                 >
+                   <Wind className="w-4 h-4" />
+                 </button>
+              </div>
+           </form>
+        </div>
 
       </div>
     </section>
