@@ -55,6 +55,20 @@ export function Hero({ onOpenModal }: HeroProps) {
     }
   }, []);
 
+  // Calcula o percentual de forma segura caso não venha no objeto (ou venha zerado)
+  const safePercentual = portalState.percentual || (
+    (() => {
+      const arr = Number(String(portalState.arrecadado).replace(/[^0-9]/g, ''));
+      let goalStr = String(portalState.goal).toUpperCase();
+      let goal = Number(goalStr.replace(/[^0-9]/g, ''));
+      if (goalStr.includes('M')) goal *= 1000000;
+      else if (goalStr.includes('K')) goal *= 1000;
+      
+      if (arr > 0 && goal > 0) return Math.min(100, Math.round((arr / goal) * 100));
+      return 0;
+    })()
+  );
+
   return (
     <section className="pt-40 pb-20 px-6 sm:px-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
       {/* Background patterns could go here, for now using faint radial gradient or shapes */}
@@ -146,12 +160,12 @@ export function Hero({ onOpenModal }: HeroProps) {
              <div className="w-full h-3 bg-gray-100 dark:bg-[#111f18] rounded-full overflow-hidden shadow-inner relative">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: `${portalState.percentual}%` }}
+                  animate={{ width: `${safePercentual}%` }}
                   transition={{ duration: 1.5, ease: "easeOut" }}
                   className="absolute left-0 top-0 h-full bg-gradient-to-r from-green-500 to-green-400"
                 />
              </div>
-             <p className="text-right text-xs mt-2 text-green-600 dark:text-green-400 font-bold">{portalState.percentual}% Alcançado</p>
+             <p className="text-right text-xs mt-2 text-green-600 dark:text-green-400 font-bold">{safePercentual}% Alcançado</p>
           </div>
         </div>
       </motion.div>
