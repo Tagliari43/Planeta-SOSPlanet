@@ -76,7 +76,7 @@ const daoProposals = [
 ];
 
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque'>('bazar');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -410,161 +410,18 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
           </div>
         </motion.div>
 
-        {/* Navigation Tabs */}
+        {/* Navigation Tabs - PORTAL CONECTADO AO PLANETA */}
         <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
           <button 
-            onClick={() => setActiveTab('overview')}
+            onClick={() => setActiveTab('bazar')}
             className={cn(
                "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'overview' 
+               activeTab === 'bazar' 
                  ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+                 : "bg-[#0b1410] text-gray-400 border border-green-900/40 hover:bg-green-900/20"
             )}
           >
-            <Activity className="w-4 h-4" /> Visão Geral
-          </button>
-          <button 
-            onClick={() => setActiveTab('eye')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'eye' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Eye className="w-4 h-4" /> Olho de Gaia
-          </button>
-          <button 
-            onClick={() => setActiveTab('dao')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'dao' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Vote className="w-4 h-4" /> O Canto dos Anciões
-          </button>
-          <button 
-            onClick={() => setActiveTab('viveiro')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'viveiro' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Sprout className="w-4 h-4" /> Viveiro Digital
-          </button>
-          <button 
-            onClick={() => setActiveTab('mural')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'mural' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <ImageIcon className="w-4 h-4" /> Eco-Mural
-          </button>
-          <button 
-            onClick={() => setActiveTab('fonte')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'fonte' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Droplets className="w-4 h-4" /> A Fonte
-          </button>
-          <button 
-            onClick={() => setActiveTab('circulo')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'circulo' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Crown className="w-4 h-4" /> Círculo
-          </button>
-          <button 
-            onClick={() => setActiveTab('codice')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'codice' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Award className="w-4 h-4" /> Códice
-          </button>
-          <button 
-            onClick={() => setActiveTab('arvore')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'arvore' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Flower className="w-4 h-4" /> A Árvore
-          </button>
-          <button 
-            onClick={() => setActiveTab('raiz')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'raiz' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Activity className="w-4 h-4" /> A Raiz da Verdade
-          </button>
-          <button 
-            onClick={() => setActiveTab('ponte')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'ponte' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Link className="w-4 h-4" /> A Ponte
-          </button>
-          <button 
-            onClick={() => setActiveTab('ninho')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'ninho' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Sprout className="w-4 h-4" /> O Ninho
-          </button>
-          <button 
-            onClick={() => setActiveTab('espelho')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'espelho' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <Droplets className="w-4 h-4" /> O Espelho
-          </button>
-          <button 
-            onClick={() => setActiveTab('trilha')}
-            className={cn(
-               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'trilha' 
-                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
-            )}
-          >
-            <MapPin className="w-4 h-4" /> A Trilha
+            <Sparkles className="w-4 h-4" /> O Bazar
           </button>
           <button 
             onClick={() => setActiveTab('altar')}
@@ -572,10 +429,21 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
                "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
                activeTab === 'altar' 
                  ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+                 : "bg-[#0b1410] text-gray-400 border border-green-900/40 hover:bg-green-900/20"
             )}
           >
             <Droplets className="w-4 h-4" /> O Altar
+          </button>
+          <button 
+            onClick={() => setActiveTab('dao')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'dao' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-green-900/40 hover:bg-green-900/20"
+            )}
+          >
+            <Vote className="w-4 h-4" /> O Canto dos Anciões
           </button>
           <button 
             onClick={() => setActiveTab('bosque')}
@@ -583,7 +451,7 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
                "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
                activeTab === 'bosque' 
                  ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
-                 : "bg-white dark:bg-[#111f18] text-gray-600 dark:text-green-100/60 border border-gray-200 dark:border-green-900/40 hover:bg-gray-50 dark:hover:bg-green-900/20"
+                 : "bg-[#0b1410] text-gray-400 border border-green-900/40 hover:bg-green-900/20"
             )}
           >
             <Network className="w-4 h-4" /> Constelações

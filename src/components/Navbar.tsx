@@ -219,7 +219,7 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
 
           {walletAddress ? (
             <button
-              onClick={onToggleDashboard}
+              onClick={() => document.getElementById('public-portal')?.scrollIntoView({ behavior: 'smooth' })}
               className={cn(
                 "flex items-center gap-2 px-3 py-1.5 rounded-full font-medium text-sm transition-all shadow-sm border relative group/avatar",
                 showDashboard 

@@ -87,41 +87,33 @@ export default function App() {
         />
         
         <main className="flex-1 pt-20">
-        <AnimatePresence mode="wait">
-          {showDashboard && walletAddress ? (
-            <motion.div
-              key="dashboard"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.4 }}
-            >
-              <GuardianDashboard walletAddress={walletAddress} biome={biome} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="landing"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <Hero onOpenModal={handleOpenModal} />
-              <ImpactSection />
-              <ImpactMap />
-              <ImpactSimulator />
-              <Features />
-              <About />
-              <Vision />
-              <Pillars />
-              <TokenSection onOpenModal={handleOpenModal} />
-              <Projects />
-              <Roadmap />
-              <FAQ />
-              <Guardians />
-            </motion.div>
-          )}
-        </AnimatePresence>
+          {/* Main flow with embedded portal */}
+          <motion.div
+            key="landing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Hero onOpenModal={handleOpenModal} />
+            
+            <div id="public-portal" className="scroll-mt-20">
+               <GuardianDashboard walletAddress={walletAddress || "0xVISITANTE..."} biome={biome} />
+            </div>
+
+            <ImpactSection />
+            <ImpactMap />
+            <ImpactSimulator />
+            <Features />
+            <About />
+            <Vision />
+            <Pillars />
+            <TokenSection onOpenModal={handleOpenModal} />
+            <Projects />
+            <Roadmap />
+            <FAQ />
+            <Guardians />
+          </motion.div>
       </main>
       
       <Footer />
