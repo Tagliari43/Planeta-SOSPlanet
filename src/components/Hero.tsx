@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ArrowRight, Activity } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { supabase } from '../lib/supabase';
+import { cn } from '../lib/utils';
 
 interface HeroProps {
   onOpenModal?: () => void;
@@ -15,7 +16,10 @@ export function Hero({ onOpenModal }: HeroProps) {
     projectStatus: 'Iniciando fase de semente...',
     badgeText: 'Lançando em breve - SOS Token',
     headline: 'SOSPlanet - Salvando o Planeta com Blockchain',
-    subheadline: 'Uma plataforma revolucionária que usa criptomoeda para reflorestar a Amazônia, reduzir a pobreza, implementar energia limpa e revolucionar a educação.'
+    subheadline: 'Uma plataforma revolucionária que usa criptomoeda para reflorestar a Amazônia, reduzir a pobreza, implementar energia limpa e revolucionar a educação.',
+    globalAlertActive: false,
+    globalAlertType: 'info',
+    globalAlertMessage: ''
   });
 
   useEffect(() => {
@@ -71,6 +75,27 @@ export function Hero({ onOpenModal }: HeroProps) {
 
   return (
     <section className="pt-40 pb-20 px-6 sm:px-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
+      <AnimatePresence>
+        {portalState.globalAlertActive && (
+          <motion.div
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -50, opacity: 0 }}
+            className="absolute top-0 left-0 right-0 z-40"
+          >
+            <div className={cn(
+              "px-4 py-3 text-sm font-bold flex items-center justify-center gap-2 shadow-md uppercase tracking-wide",
+              portalState.globalAlertType === 'urgent' && "bg-red-500 text-white animate-pulse shadow-[0_4px_20px_rgba(239,68,68,0.5)]",
+              portalState.globalAlertType === 'warning' && "bg-yellow-400 text-yellow-900 shadow-[0_4px_20px_rgba(250,204,21,0.3)]",
+              (!portalState.globalAlertType || portalState.globalAlertType === 'info') && "bg-cyan-500 text-white shadow-[0_4px_20px_rgba(6,182,212,0.4)]"
+            )}>
+              {portalState.globalAlertType === 'urgent' && <Activity className="w-4 h-4 animate-bounce" />}
+              {portalState.globalAlertMessage}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Background patterns could go here, for now using faint radial gradient or shapes */}
       <div className="absolute top-1/4 left-10 w-12 h-12 bg-green-50 rounded-full blur-xl opacity-60 dark:opacity-5"></div>
       <div className="absolute bottom-10 right-20 w-24 h-24 bg-green-50 rounded-full blur-2xl opacity-60 dark:opacity-5"></div>
