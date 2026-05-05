@@ -9,6 +9,7 @@ import { Globe } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { RadarDaEvolucao } from './components/RadarDaEvolucao';
+import { EmergingFamily } from './components/EmergingFamily';
 import { ImpactSection } from './components/ImpactSection';
 import { ImpactMap } from './components/ImpactMap';
 import { ImpactSimulator } from './components/ImpactSimulator';
@@ -99,6 +100,7 @@ export default function App() {
             <Hero onOpenModal={handleOpenModal} />
             
             <RadarDaEvolucao />
+            <EmergingFamily />
             
             <div id="public-portal" className="scroll-mt-20">
                <GuardianDashboard walletAddress={walletAddress || "0xVISITANTE..."} biome={biome} />
