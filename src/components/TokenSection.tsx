@@ -37,7 +37,14 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
           .single();
         
         if (data && data.data && !error) {
-           setTokenStats(prevState => ({ ...prevState, ...data.data }));
+           const dbData = data.data as any;
+           setTokenStats(prevState => ({ 
+             ...prevState, 
+             ...dbData,
+             ...(dbData.tokenSupply && { fornecimentoTotal: dbData.tokenSupply }),
+             ...(dbData.tokenSymbol && { simbolo: dbData.tokenSymbol }),
+             ...(dbData.tokenPlatform && { plataforma: dbData.tokenPlatform })
+           }));
         }
       } catch (e) {
         console.error("Falha ao buscar estado do portal em Token", e);
@@ -51,7 +58,14 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
         .channel('portal_state_changes_token')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_state', filter: 'id=eq.1' }, payload => {
           if (payload.new && payload.new.data) {
-             setTokenStats(prevState => ({ ...prevState, ...payload.new.data as any }));
+             const dbData = payload.new.data as any;
+             setTokenStats(prevState => ({ 
+               ...prevState, 
+               ...dbData,
+               ...(dbData.tokenSupply && { fornecimentoTotal: dbData.tokenSupply }),
+               ...(dbData.tokenSymbol && { simbolo: dbData.tokenSymbol }),
+               ...(dbData.tokenPlatform && { plataforma: dbData.tokenPlatform })
+             }));
           }
         })
         .subscribe();

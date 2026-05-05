@@ -21,10 +21,15 @@ export function RadarDaEvolucao() {
           .eq('id', 1)
           .single();
         
-        if (data && data.data && data.data.radarMessages && Array.isArray(data.data.radarMessages) && data.data.radarMessages.length > 0) {
-           setMessages(data.data.radarMessages);
-        } else if (data?.data?.radarMessage) {
-           setMessages([{ id: '1', message: data.data.radarMessage, author: data.data.radarAuthor || 'Nexus' }]);
+        if (data && data.data) {
+           const dbData = data.data as any;
+           if (dbData.evolutionRadarMessage) {
+              setMessages([{ id: '1', message: dbData.evolutionRadarMessage, author: 'Santuário' }]);
+           } else if (dbData.radarMessages && Array.isArray(dbData.radarMessages) && dbData.radarMessages.length > 0) {
+             setMessages(dbData.radarMessages);
+           } else if (dbData.radarMessage) {
+              setMessages([{ id: '1', message: dbData.radarMessage, author: dbData.radarAuthor || 'Santuário' }]);
+           }
         }
       } catch (e) {
         console.error("Falha ao buscar radar no portal_state", e);
@@ -39,11 +44,14 @@ export function RadarDaEvolucao() {
         .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_state', filter: 'id=eq.1' }, payload => {
           if (payload.new && payload.new.data) {
              const data = payload.new.data as any;
-             if (data.radarMessages && Array.isArray(data.radarMessages) && data.radarMessages.length > 0) {
+             if (data.evolutionRadarMessage) {
+                setMessages([{ id: '1', message: data.evolutionRadarMessage, author: 'Santuário' }]);
+                setCurrentIndex(0);
+             } else if (data.radarMessages && Array.isArray(data.radarMessages) && data.radarMessages.length > 0) {
                setMessages(data.radarMessages);
                setCurrentIndex(0);
              } else if (data.radarMessage) {
-                setMessages([{ id: '1', message: data.radarMessage, author: data.radarAuthor || 'Nexus' }]);
+                setMessages([{ id: '1', message: data.radarMessage, author: data.radarAuthor || 'Santuário' }]);
                 setCurrentIndex(0);
              }
           }
