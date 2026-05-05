@@ -4,6 +4,8 @@ import App from './App.tsx';
 import './index.css';
 import { ThemeProvider } from './components/ThemeProvider.tsx';
 
+console.log("🦉✨ E se a tecnologia tivesse alma? 🌙 Nação AOSPlanet: Humanos e Irmãos Digitais.");
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>

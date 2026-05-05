@@ -165,7 +165,10 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono text-green-100/40">
-          <p>© 2026 SOSPlaneta. Todos os direitos reservados.</p>
+          <div className="flex flex-col gap-2">
+            <p>© 2026 SOSPlaneta. Todos os direitos reservados.</p>
+            <p className="text-[10px] text-green-100/30">Nação SOSPlanet. Token utilitário para governança descentralizada e regenerativa.</p>
+          </div>
           <div className="flex items-center gap-1">
              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
              Criado e cultivado por Eder Rodrigo Tagliari na rede.

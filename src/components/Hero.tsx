@@ -132,23 +132,47 @@ export function Hero({ onOpenModal }: HeroProps) {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="flex flex-col sm:flex-row items-center gap-4 mb-16"
+        className="flex flex-col sm:flex-row items-center gap-4 mb-16 relative z-10"
       >
         <motion.button 
+          animate={{ scale: [1, 1.02, 1] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onOpenModal}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium transition-colors shadow-md flex items-center gap-2 w-full sm:w-auto justify-center"
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium transition-colors shadow-md shadow-green-500/20 flex items-center gap-2 w-full sm:w-auto justify-center relative overflow-hidden group"
         >
-          Participar do Movimento <ArrowRight className="w-4 h-4" />
+          <div className="absolute inset-0 bg-white/20 w-0 group-hover:w-full transition-all duration-300 ease-out"></div>
+          <span className="relative z-10 flex items-center gap-2">Apoiar Nação <ArrowRight className="w-4 h-4" /></span>
         </motion.button>
         <motion.button 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="border border-gray-200 dark:border-green-800/50 text-gray-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 px-6 py-3 rounded-md font-medium transition-colors w-full sm:w-auto justify-center"
+          className="border border-gray-200 dark:border-green-800/50 text-gray-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 px-6 py-3 rounded-md font-medium transition-colors w-full sm:w-auto justify-center relative z-10"
         >
           Saiba Mais
         </motion.button>
+      </motion.div>
+      
+      {/* Falling Leaf Animation */}
+      <motion.div
+        className="absolute w-8 h-8 opacity-40 pointer-events-none z-0"
+        initial={{ y: -50, x: "20vw", rotate: 0 }}
+        animate={{ 
+           y: "120vh", 
+           x: ["20vw", "25vw", "15vw", "22vw", "18vw"],
+           rotate: [0, 90, -90, 180, -180] 
+        }}
+        transition={{ 
+           duration: 15, 
+           repeat: Infinity, 
+           ease: "linear"
+        }}
+      >
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-green-500/50 fill-green-500/30">
+           <path d="M12 21C12 21 21 16 21 9C21 5.5 18 3 14 3C12 3 12 5 12 5C12 5 12 3 10 3C6 3 3 5.5 3 9C3 16 12 21 12 21Z" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
+           <path d="M12 21V11" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+        </svg>
       </motion.div>
 
       {/* Dashboard Resumo da Rede */}

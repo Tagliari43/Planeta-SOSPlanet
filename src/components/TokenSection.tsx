@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import { CircleDollarSign, ShieldCheck, Globe, RefreshCw } from 'lucide-react';
 import { Logo } from './Logo';
 import { motion } from 'motion/react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { supabase } from '../lib/supabase';
 
 interface TokenSectionProps {
   onOpenModal?: () => void;
@@ -15,6 +17,50 @@ const tokenomicsData = [
 ];
 
 export function TokenSection({ onOpenModal }: TokenSectionProps) {
+  const [tokenStats, setTokenStats] = useState({
+    nome: 'Planeta SOSPlanet',
+    simbolo: 'SOS',
+    plataforma: 'Algorand',
+    id: '735028557',
+    fornecimentoTotal: '1.000.000.000 SOS',
+    status: 'Ativo'
+  });
+
+  useEffect(() => {
+    const fetchState = async () => {
+      try {
+        if (!supabase) return;
+        const { data, error } = await supabase
+          .from('portal_state')
+          .select('data')
+          .eq('id', 1)
+          .single();
+        
+        if (data && data.data && !error) {
+           setTokenStats(prevState => ({ ...prevState, ...data.data }));
+        }
+      } catch (e) {
+        console.error("Falha ao buscar estado do portal em Token", e);
+      }
+    };
+    
+    if (supabase) {
+      fetchState();
+      
+      const subscription = supabase
+        .channel('portal_state_changes_token')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_state', filter: 'id=eq.1' }, payload => {
+          if (payload.new && payload.new.data) {
+             setTokenStats(prevState => ({ ...prevState, ...payload.new.data as any }));
+          }
+        })
+        .subscribe();
+        
+      return () => {
+        subscription.unsubscribe();
+      }
+    }
+  }, []);
   const tokenFeatures = [
     {
       icon: <CircleDollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />,
@@ -117,27 +163,27 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
             <div className="space-y-4">
               <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
                 <span className="text-gray-600 dark:text-green-100/70 font-medium">Nome do Token</span>
-                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">Planeta SOSPlanet</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">{tokenStats.nome || "Planeta SOSPlanet"}</span>
               </div>
               <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
                 <span className="text-gray-600 dark:text-green-100/70 font-medium">Símbolo</span>
-                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">SOS</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">{tokenStats.simbolo || "SOS"}</span>
               </div>
               <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
                 <span className="text-gray-600 dark:text-green-100/70 font-medium">Plataforma</span>
-                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">Algorand</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">{tokenStats.plataforma || "Algorand"}</span>
               </div>
               <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
                 <span className="text-gray-600 dark:text-green-100/70 font-medium">ID do token</span>
-                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">735028557</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">{tokenStats.id || "735028557"}</span>
               </div>
               <div className="flex justify-between items-center py-4 border-b border-gray-100 dark:border-green-900/30">
                 <span className="text-gray-600 dark:text-green-100/70 font-medium">Fornecimento Total</span>
-                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">1.000.000.000 SOS</span>
+                <span className="text-gray-900 dark:text-green-50 font-semibold text-right">{tokenStats.fornecimentoTotal || "1.000.000.000 SOS"}</span>
               </div>
               <div className="flex justify-between items-center py-4">
                 <span className="text-gray-600 dark:text-green-100/70 font-medium">Status</span>
-                <span className="text-green-600 dark:text-green-400 font-semibold text-right">Ativo</span>
+                <span className="text-green-600 dark:text-green-400 font-semibold text-right">{tokenStats.status || "Ativo"}</span>
               </div>
             </div>
 
@@ -235,7 +281,7 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
             onClick={onOpenModal}
             className="bg-green-600 dark:bg-green-700 hover:bg-green-700 dark:hover:bg-green-600 text-white px-6 py-2.5 rounded-md transition-colors shadow-sm"
           >
-            Comprar Token SOS
+            Apoiar Nação
           </motion.button>
           <motion.button 
             whileHover={{ scale: 1.05 }}

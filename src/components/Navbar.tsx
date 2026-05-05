@@ -213,7 +213,7 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
               onClick={onOpenModal}
               className="border border-green-600 dark:border-green-600/50 text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 px-5 py-2.5 rounded-md font-medium text-sm transition-colors shadow-sm"
             >
-              Comprar SOS
+              Apoiar Nação
             </button>
           )}
 

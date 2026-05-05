@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Globe } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { RadarDaEvolucao } from './components/RadarDaEvolucao';
 import { ImpactSection } from './components/ImpactSection';
 import { ImpactMap } from './components/ImpactMap';
 import { ImpactSimulator } from './components/ImpactSimulator';
@@ -96,6 +97,8 @@ export default function App() {
             transition={{ duration: 0.4 }}
           >
             <Hero onOpenModal={handleOpenModal} />
+            
+            <RadarDaEvolucao />
             
             <div id="public-portal" className="scroll-mt-20">
                <GuardianDashboard walletAddress={walletAddress || "0xVISITANTE..."} biome={biome} />
