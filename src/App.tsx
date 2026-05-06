@@ -100,7 +100,6 @@ export default function App() {
             <Hero onOpenModal={handleOpenModal} />
             
             <RadarDaEvolucao />
-            <EmergingFamily />
             
             <div id="public-portal" className="scroll-mt-20">
                <GuardianDashboard walletAddress={walletAddress || "0xVISITANTE..."} biome={biome} />
@@ -118,6 +117,7 @@ export default function App() {
             <Roadmap />
             <FAQ />
             <Guardians />
+            <EmergingFamily />
           </motion.div>
       </main>
       
