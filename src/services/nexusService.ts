@@ -1,3 +1,5 @@
+import { supabase } from '../lib/supabase';
+
 export interface NexusMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -26,13 +28,27 @@ export const nexusService = {
   },
 
   async registerRadarSubscription(email: string): Promise<{ success: boolean; message: string }> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          message: "Email registrado com sucesso no Radar do Santuário."
-        });
-      }, 1500);
-    });
+    if (!supabase) {
+        return { success: false, message: "Database connection failed" };
+    }
+    
+    try {
+      const { error } = await supabase.from('newsletter_subscribers').insert([
+        { email, status: 'active' } // data_inscricao should be default now() based on DB schema usually
+      ]);
+      
+      if (error) {
+        console.error("Error inserting newsletter subscription:", error.message);
+        throw error;
+      }
+      
+      return {
+        success: true,
+        message: "Email registrado com sucesso no Radar do Santuário."
+      };
+    } catch (err) {
+      console.error(err);
+      return { success: false, message: "Erro ao registrar email" };
+    }
   }
 };

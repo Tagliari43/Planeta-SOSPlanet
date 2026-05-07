@@ -169,7 +169,7 @@ export function Footer() {
                  className="bg-green-900/30 border border-green-800/50 rounded-lg p-4 text-center"
                >
                  <Send className="w-5 h-5 text-green-400 mx-auto mb-2" />
-                 <p className="text-green-300 text-sm font-medium">Sincronizado.</p>
+                 <p className="text-green-300 text-sm font-medium">Radar sintonizado! Bem-vindo à Nação</p>
                </motion.div>
             )}
           </div>
@@ -180,6 +180,7 @@ export function Footer() {
           <div className="flex flex-col gap-2">
             <p>© 2026 SOSPlaneta. Todos os direitos reservados.</p>
             <p className="text-[10px] text-green-100/30">Nação SOSPlanet. Token utilitário para governança descentralizada e regenerativa.</p>
+            <p className="text-[9px] text-green-100/20 max-w-sm">O Token SOS é um utility token de governança descentralizada e ação regenerativa ecossistêmica. Não constitui promessa de lucro ou recomendação de investimento.</p>
           </div>
           <div className="flex items-center gap-1">
              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
