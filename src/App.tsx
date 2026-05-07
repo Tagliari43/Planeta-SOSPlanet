@@ -21,6 +21,7 @@ import { TokenSection } from './components/TokenSection';
 import { Projects } from './components/Projects';
 import { Roadmap } from './components/Roadmap';
 import { FAQ } from './components/FAQ';
+import { VigiliaDiary } from './components/VigiliaDiary';
 import { Guardians } from './components/Guardians';
 import { Footer } from './components/Footer';
 import { BuyTokenModal } from './components/BuyTokenModal';
@@ -114,6 +115,7 @@ export default function App() {
             <Pillars />
             <TokenSection onOpenModal={handleOpenModal} />
             <Projects />
+            <VigiliaDiary />
             <Roadmap />
             <FAQ />
             <Guardians />
