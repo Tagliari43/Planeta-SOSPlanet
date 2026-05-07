@@ -208,9 +208,10 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
             </div>
             
             <div className="mt-6 flex justify-center">
-              <a href="#" className="text-green-600 dark:text-green-400 font-medium hover:text-green-800 dark:hover:text-green-300 text-sm flex items-center gap-1 transition-colors">
+              <span className="text-green-600/50 dark:text-green-400/50 font-medium text-sm flex items-center gap-1 cursor-not-allowed">
                 Ver no Algorand Explorer <RefreshCw className="w-3 h-3 ml-1" />
-              </a>
+                <span className="text-[10px] ml-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 px-1.5 py-0.5 rounded">Em Breve</span>
+              </span>
             </div>
           </motion.div>
 

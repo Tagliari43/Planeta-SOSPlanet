@@ -329,9 +329,9 @@ export function BuyTokenModal({ isOpen, onClose }: BuyTokenModalProps) {
             
             <div className="pt-2">
               <div className="flex flex-wrap justify-center gap-x-6 gap-y-3">
-                <a href="#" className="text-sm font-medium text-gray-600 hover:text-green-600 transition-colors">Discord</a>
-                <a href="#" className="text-sm font-medium text-gray-600 hover:text-green-600 transition-colors">Telegram</a>
-                <a href="#" className="text-sm font-medium text-gray-600 hover:text-green-600 transition-colors">Twitter/X</a>
+                <span className="text-sm font-medium text-gray-400 cursor-not-allowed">Discord <span className="text-[10px] ml-1 bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Em Breve</span></span>
+                <span className="text-sm font-medium text-gray-400 cursor-not-allowed">Telegram <span className="text-[10px] ml-1 bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Em Breve</span></span>
+                <span className="text-sm font-medium text-gray-400 cursor-not-allowed">Twitter/X <span className="text-[10px] ml-1 bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Em Breve</span></span>
               </div>
             </div>
             

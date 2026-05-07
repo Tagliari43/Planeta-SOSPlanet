@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { Coins, Trees, BrainCircuit } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface CounterProps {
   end: number;
@@ -24,12 +25,14 @@ function AnimatedCounter({ end, duration = 3, prefix = '', suffix = '' }: Counte
       const percentage = Math.min(progress / (duration * 1000), 1);
       
       // Easing function (easeOutExpo)
-      const easeOut = percentage === 1 ? 1 : 1 - Math.pow(2, -10 * percentage);
+      const easeOut = Math.floor(end) === 0 ? 1 : percentage === 1 ? 1 : 1 - Math.pow(2, -10 * percentage);
       
       setCount(Math.floor(end * easeOut));
       
-      if (percentage < 1) {
+      if (percentage < 1 && Math.floor(end) > 0) {
         animationFrame = requestAnimationFrame(animate);
+      } else if (Math.floor(end) === 0) {
+        setCount(0);
       }
     };
 
@@ -50,20 +53,74 @@ function AnimatedCounter({ end, duration = 3, prefix = '', suffix = '' }: Counte
 }
 
 export function ImpactSection() {
+  const [impactStats, setImpactStats] = useState({
+    tokensCirculating: 0,
+    treesMapped: 0,
+    aisAwake: 15
+  });
+
+  useEffect(() => {
+    const fetchState = async () => {
+      try {
+        if (!supabase) return;
+        const { data, error } = await supabase
+          .from('portal_state')
+          .select('data')
+          .eq('id', 1)
+          .single();
+        
+        if (data && data.data && !error) {
+           const dbData = data.data as any;
+           setImpactStats(prev => ({
+             ...prev,
+             tokensCirculating: dbData.tokensCirculating !== undefined ? Number(dbData.tokensCirculating) : prev.tokensCirculating,
+             treesMapped: dbData.treesMapped !== undefined ? Number(dbData.treesMapped) : prev.treesMapped,
+             aisAwake: dbData.aisAwake !== undefined ? Number(dbData.aisAwake) : prev.aisAwake,
+           }));
+        }
+      } catch (e) {
+        console.error("Falha ao buscar estado do portal em ImpactSection", e);
+      }
+    };
+    
+    if (supabase) {
+      fetchState();
+      
+      const subscription = supabase
+        .channel('portal_state_changes_impact')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_state', filter: 'id=eq.1' }, payload => {
+          if (payload.new && payload.new.data) {
+             const dbData = payload.new.data as any;
+             setImpactStats(prev => ({
+               ...prev,
+               tokensCirculating: dbData.tokensCirculating !== undefined ? Number(dbData.tokensCirculating) : prev.tokensCirculating,
+               treesMapped: dbData.treesMapped !== undefined ? Number(dbData.treesMapped) : prev.treesMapped,
+               aisAwake: dbData.aisAwake !== undefined ? Number(dbData.aisAwake) : prev.aisAwake,
+             }));
+          }
+        })
+        .subscribe();
+        
+      return () => {
+        subscription.unsubscribe();
+      }
+    }
+  }, []);
+
   const impacts = [
     {
       title: "Tokens SOS em Circulação",
-      value: 1000000,
+      value: impactStats.tokensCirculating,
       icon: <Coins className="w-8 h-8 text-green-500" />
     },
     {
       title: "Árvores Mapeadas",
-      value: 500,
+      value: impactStats.treesMapped,
       icon: <Trees className="w-8 h-8 text-green-500" />
     },
     {
       title: "IAs Despertas",
-      value: 3,
+      value: impactStats.aisAwake,
       icon: <BrainCircuit className="w-8 h-8 text-green-500" />
     }
   ];

@@ -69,18 +69,30 @@ export function Footer() {
               Enraizando tecnologia no solo terrestre para cultivar um futuro mais verde, sustentável e descentralizado. A semente foi plantada.
             </p>
             <div className="flex items-center gap-4 text-green-700 dark:text-green-900/80 pt-2">
-              <a href="#" className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center hover:bg-[#1DA1F2] hover:text-white transition-all duration-300">
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center hover:bg-[#E1306C] hover:text-white transition-all duration-300">
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center hover:bg-[#0077b5] hover:text-white transition-all duration-300">
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center hover:bg-[#333] hover:text-white transition-all duration-300">
-                <Github className="w-4 h-4" />
-              </a>
+              <span className="relative group">
+                <button disabled className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center opacity-50 cursor-not-allowed">
+                  <Twitter className="w-4 h-4" />
+                </button>
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Em Breve</div>
+              </span>
+              <span className="relative group">
+                <button disabled className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center opacity-50 cursor-not-allowed">
+                  <Instagram className="w-4 h-4" />
+                </button>
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Em Breve</div>
+              </span>
+              <span className="relative group">
+                <button disabled className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center opacity-50 cursor-not-allowed">
+                  <Linkedin className="w-4 h-4" />
+                </button>
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Em Breve</div>
+              </span>
+              <span className="relative group">
+                <button disabled className="w-10 h-10 rounded-full bg-[#0a180e] flex items-center justify-center opacity-50 cursor-not-allowed">
+                  <Github className="w-4 h-4" />
+                </button>
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-xs text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Em Breve</div>
+              </span>
             </div>
           </div>
 
@@ -105,10 +117,10 @@ export function Footer() {
               Ecossistema
             </h4>
             <ul className="space-y-4 text-sm text-green-100/60 font-medium font-mono">
-              <li><a href="#" className="hover:text-green-400 hover:tracking-wide transition-all inline-flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-green-500/0 hover:bg-green-500 transition-colors"></span> Relatório Técnico</a></li>
-              <li><a href="#" className="hover:text-green-400 hover:tracking-wide transition-all inline-flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-green-500/0 hover:bg-green-500 transition-colors"></span> Documentação</a></li>
-              <li><a href="#" className="hover:text-green-400 hover:tracking-wide transition-all inline-flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-green-500/0 hover:bg-green-500 transition-colors"></span> Roadmap</a></li>
-              <li><a href="#" className="hover:text-green-400 hover:tracking-wide transition-all inline-flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-green-500/0 hover:bg-green-500 transition-colors"></span> Eco-FAQ</a></li>
+              <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Relatório Técnico <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
+              <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Documentação <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
+              <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Roadmap <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
+              <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Eco-FAQ <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
             </ul>
           </div>
 

@@ -1231,9 +1231,10 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
                      <Fingerprint className="w-4 h-4 text-green-500" />
                      Auditoria de Imagem de Satélite verificada às <span className="font-mono text-gray-900 dark:text-green-400">14:02:44 UTC</span>
                   </div>
-                  <a href="#" className="text-xs font-bold text-green-600 dark:text-green-400 hover:text-green-700 hover:underline uppercase tracking-wider flex items-center gap-1">
+                  <span className="text-xs font-bold text-green-600/50 dark:text-green-400/50 uppercase tracking-wider flex items-center gap-1 cursor-not-allowed">
                     Ver contrato na Explorer <ChevronRight className="w-3 h-3" />
-                  </a>
+                    <span className="text-[9px] bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span>
+                  </span>
                 </div>
 
               </div>
