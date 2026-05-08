@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trees, GraduationCap, Coins, ShieldCheck, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X } from 'lucide-react';
+import { Trees, GraduationCap, Coins, ShieldCheck, Shield, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { cn } from '../lib/utils';
 

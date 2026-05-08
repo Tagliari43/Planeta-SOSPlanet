@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Wallet, ShieldCheck, Loader2 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { PeraWalletConnect } from '@perawallet/connect';
 
 interface ConnectWalletModalProps {
   isOpen: boolean;
@@ -9,24 +10,57 @@ interface ConnectWalletModalProps {
   onConnect: (address: string) => void;
 }
 
-const wallets = [
-  { id: 'pera', name: 'Pera Wallet', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
-  { id: 'defly', name: 'Defly Wallet', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' },
-  { id: 'algosigner', name: 'AlgoSigner', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
-];
+const peraWallet = new PeraWalletConnect({
+  shouldShowSignTxnToast: false
+});
 
 export function ConnectWalletModal({ isOpen, onClose, onConnect }: ConnectWalletModalProps) {
   const [connecting, setConnecting] = useState<string | null>(null);
 
-  const handleConnect = (walletId: string) => {
+  useEffect(() => {
+    // Reconnect to the session when the component mounts
+    peraWallet.reconnectSession().then((accounts) => {
+      // Setup the disconnect event listener
+      peraWallet.connector?.on("disconnect", () => {
+        peraWallet.disconnect();
+      });
+
+      if (accounts.length) {
+        onConnect(accounts[0]);
+      }
+    });
+  }, [onConnect]);
+
+  const handleConnect = async (walletId: string) => {
     setConnecting(walletId);
-    // Simulate network delay
-    setTimeout(() => {
-      setConnecting(null);
-      onConnect("SOSX...9A2Z");
-      onClose();
-    }, 2000);
+    if (walletId === 'pera') {
+      try {
+        const newAccounts = await peraWallet.connect();
+        if (newAccounts.length > 0) {
+          onConnect(newAccounts[0]);
+          onClose();
+        }
+      } catch (error) {
+        // User cancelled or error
+        console.error("Wallet connection failed:", error);
+      } finally {
+        setConnecting(null);
+      }
+    } else {
+      // Simulate network delay for others
+      setTimeout(() => {
+        setConnecting(null);
+        onConnect("SOSX...9A2Z");
+        onClose();
+      }, 2000);
+    }
   };
+
+  const wallets = [
+    { id: 'pera', name: 'Pera Wallet', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
+    { id: 'defly', name: 'Defly Wallet (Em Breve)', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300', disabled: true },
+    { id: 'algosigner', name: 'AlgoSigner (Em Breve)', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', disabled: true },
+  ];
 
   return (
     <AnimatePresence>
@@ -68,13 +102,13 @@ export function ConnectWalletModal({ isOpen, onClose, onConnect }: ConnectWallet
                 <button
                   key={wallet.id}
                   onClick={() => handleConnect(wallet.id)}
-                  disabled={connecting !== null}
+                  disabled={connecting !== null || wallet.disabled}
                   className={cn(
                     "w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300",
                     connecting === wallet.id 
                       ? "border-green-500 bg-green-50 dark:bg-green-900/20 dark:border-green-600" 
                       : "border-gray-200 dark:border-green-800/40 hover:border-green-400 dark:hover:border-green-600 hover:bg-gray-50 dark:hover:bg-[#111f18] bg-white dark:bg-[#0b1410]",
-                    connecting !== null && connecting !== wallet.id && "opacity-50 cursor-not-allowed"
+                    (connecting !== null && connecting !== wallet.id) || wallet.disabled ? "opacity-50 cursor-not-allowed" : ""
                   )}
                 >
                   <div className="flex items-center gap-3">

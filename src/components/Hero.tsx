@@ -47,8 +47,8 @@ export function Hero({ onOpenModal }: HeroProps) {
       const subscription = supabase
         .channel('portal_state_changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_state', filter: 'id=eq.1' }, payload => {
-          if (payload.new && payload.new.data) {
-             setPortalState(prevState => ({ ...prevState, ...payload.new.data as any }));
+          if (payload.new && (payload.new as any).data) {
+             setPortalState(prevState => ({ ...prevState, ...(payload.new as any).data as any }));
           }
         })
         .subscribe();

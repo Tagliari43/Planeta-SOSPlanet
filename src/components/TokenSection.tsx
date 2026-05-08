@@ -57,8 +57,8 @@ export function TokenSection({ onOpenModal }: TokenSectionProps) {
       const subscription = supabase
         .channel('portal_state_changes_token')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_state', filter: 'id=eq.1' }, payload => {
-          if (payload.new && payload.new.data) {
-             const dbData = payload.new.data as any;
+          if (payload.new && (payload.new as any).data) {
+             const dbData = (payload.new as any).data as any;
              setTokenStats(prevState => ({ 
                ...prevState, 
                ...dbData,

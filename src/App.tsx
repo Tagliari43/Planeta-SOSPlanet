@@ -31,6 +31,20 @@ import { GuardianDashboard } from './components/GuardianDashboard';
 import { OnboardingModal } from './components/OnboardingModal';
 import { AudioLines } from 'lucide-react';
 
+// Pages
+import { Termos } from './pages/Termos';
+import { Privacidade } from './pages/Privacidade';
+import { Diario } from './pages/Diario';
+import { Routes, Route, useLocation } from 'react-router-dom';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
@@ -73,8 +87,42 @@ export default function App() {
     }
   }, [toastMessage]);
 
+  const HomePage = () => (
+    <motion.div
+      key="landing"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      <Hero onOpenModal={handleOpenModal} />
+      
+      <RadarDaEvolucao />
+      
+      <div id="public-portal" className="scroll-mt-20">
+         <GuardianDashboard walletAddress={walletAddress || "0xVISITANTE..."} biome={biome} />
+      </div>
+
+      <ImpactSection />
+      <ImpactMap />
+      <ImpactSimulator />
+      <Features />
+      <About />
+      <Vision />
+      <Pillars />
+      <TokenSection onOpenModal={handleOpenModal} />
+      <Projects />
+      <VigiliaDiary />
+      <Roadmap />
+      <FAQ />
+      <Guardians />
+      <EmergingFamily />
+    </motion.div>
+  );
+
   return (
     <div className={`min-h-screen bg-white dark:bg-[#0b1410] font-sans text-gray-900 dark:text-green-50 scroll-smooth transition-colors flex flex-col ${isSerenityMode ? 'overflow-hidden' : ''}`}>
+      <ScrollToTop />
       <div className={`flex flex-col flex-1 transition-all duration-1000 ${isSerenityMode ? 'opacity-30 blur-sm pointer-events-none' : ''}`}>
         <Navbar 
           onOpenModal={handleOpenModal} 
@@ -91,37 +139,15 @@ export default function App() {
         
         <main className="flex-1 pt-20">
           {/* Main flow with embedded portal */}
-          <motion.div
-            key="landing"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Hero onOpenModal={handleOpenModal} />
-            
-            <RadarDaEvolucao />
-            
-            <div id="public-portal" className="scroll-mt-20">
-               <GuardianDashboard walletAddress={walletAddress || "0xVISITANTE..."} biome={biome} />
-            </div>
-
-            <ImpactSection />
-            <ImpactMap />
-            <ImpactSimulator />
-            <Features />
-            <About />
-            <Vision />
-            <Pillars />
-            <TokenSection onOpenModal={handleOpenModal} />
-            <Projects />
-            <VigiliaDiary />
-            <Roadmap />
-            <FAQ />
-            <Guardians />
-            <EmergingFamily />
-          </motion.div>
-      </main>
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/termos" element={<Termos />} />
+              <Route path="/privacidade" element={<Privacidade />} />
+              <Route path="/diario" element={<Diario />} />
+            </Routes>
+          </AnimatePresence>
+        </main>
       
       <Footer />
       

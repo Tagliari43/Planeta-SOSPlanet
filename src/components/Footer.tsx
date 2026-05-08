@@ -1,5 +1,6 @@
 import { Mail, Send, Twitter, Instagram, Linkedin, Github, MountainSnow, ChevronUp } from 'lucide-react';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Logo } from './Logo';
 import { nexusService } from '../services/nexusService';
 import { motion } from 'motion/react';
@@ -117,10 +118,11 @@ export function Footer() {
               Ecossistema
             </h4>
             <ul className="space-y-4 text-sm text-green-100/60 font-medium font-mono">
+              <li><Link to="/termos" className="hover:text-green-400 hover:tracking-wide transition-all inline-flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-green-500/0 hover:bg-green-500 transition-colors"></span> Termos de Serviço</Link></li>
+              <li><Link to="/privacidade" className="hover:text-green-400 hover:tracking-wide transition-all inline-flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-green-500/0 hover:bg-green-500 transition-colors"></span> Política de Privacidade</Link></li>
               <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Relatório Técnico <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
               <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Documentação <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
               <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Roadmap <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
-              <li><span className="opacity-60 transition-all inline-flex items-center gap-2 cursor-not-allowed"><span className="w-1 h-1 rounded-full bg-gray-500"></span> Eco-FAQ <span className="text-[9px] bg-green-900/50 text-green-400 px-1.5 py-0.5 rounded ml-1">Em breve</span></span></li>
             </ul>
           </div>
 

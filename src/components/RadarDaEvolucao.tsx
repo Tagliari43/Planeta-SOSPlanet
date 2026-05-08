@@ -42,8 +42,8 @@ export function RadarDaEvolucao() {
       const subscription = supabase
         .channel('portal_state_changes_radar')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'portal_state', filter: 'id=eq.1' }, payload => {
-          if (payload.new && payload.new.data) {
-             const data = payload.new.data as any;
+          if (payload.new && (payload.new as any).data) {
+             const data = (payload.new as any).data as any;
              if (data.evolutionRadarMessage) {
                 setMessages([{ id: '1', message: data.evolutionRadarMessage, author: 'Santuário' }]);
                 setCurrentIndex(0);

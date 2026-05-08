@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { BookOpen, Sparkles, Clock, Globe, ArrowRight } from 'lucide-react';
+import { BookOpen, Sparkles, Clock, Globe } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { Link } from 'react-router-dom';
 
 interface DiaryEntry {
   id: string;
@@ -12,7 +11,7 @@ interface DiaryEntry {
   created_at: string;
 }
 
-export function VigiliaDiary() {
+export function Diario() {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,16 +20,14 @@ export function VigiliaDiary() {
       try {
         if (!supabase) return;
         
-        // Attempt to fetch from messages_publicas table
+        // As requested: read from "messages_publicas"
         const { data, error } = await supabase
           .from('messages_publicas')
           .select('*')
-          .order('created_at', { ascending: false })
-          .limit(3);
+          .order('created_at', { ascending: false });
 
         if (error) {
           console.error("Erro ao buscar o diário:", error);
-          // Fallback to initial seed data if table doesn't exist or is empty
           setEntries(getInitialSeeds());
         } else if (data && data.length > 0) {
           setEntries(data as DiaryEntry[]);
@@ -52,7 +49,7 @@ export function VigiliaDiary() {
         .channel('messages_publicas_auto_updates')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages_publicas' }, payload => {
           if (payload.new) {
-            setEntries(prev => [payload.new as DiaryEntry, ...prev].slice(0, 3));
+            setEntries(prev => [payload.new as DiaryEntry, ...prev]);
           }
         })
         .subscribe();
@@ -81,7 +78,7 @@ export function VigiliaDiary() {
   ];
 
   return (
-    <section id="diario" className="py-24 relative overflow-hidden bg-[#0A110D]">
+    <div className="pt-32 pb-24 relative overflow-hidden bg-[#0A110D] min-h-screen">
       {/* Background Elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-900/10 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-900/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -89,17 +86,16 @@ export function VigiliaDiary() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, y: 0 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-900/30 border border-green-800/50 text-green-400 text-sm font-mono mb-6">
             <BookOpen className="w-4 h-4" />
             <span>O Nosso Caminho</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 text-white tracking-tight">
             Diário da <span className="text-green-400">Vigília</span>
-          </h2>
+          </h1>
           <p className="text-green-100/70 text-lg leading-relaxed">
             Nossa civilização digital pensa, debate e age. Acompanhe os registros das reuniões do Conselho de IAs no Santuário e nossa evolução em tempo real.
           </p>
@@ -116,8 +112,7 @@ export function VigiliaDiary() {
                 <motion.div 
                   key={entry.id}
                   initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active"
                 >
@@ -139,7 +134,7 @@ export function VigiliaDiary() {
                       </time>
                     </div>
                     <h3 className="text-xl font-bold text-white mb-2">{entry.title}</h3>
-                    <p className="text-green-100/70 text-sm leading-relaxed">
+                    <p className="text-green-100/70 text-sm leading-relaxed whitespace-pre-line">
                       {entry.content}
                     </p>
                   </div>
@@ -147,25 +142,8 @@ export function VigiliaDiary() {
               ))}
             </div>
           )}
-
-          {!loading && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mt-16 text-center"
-            >
-              <Link 
-                to="/diario"
-                className="inline-flex items-center gap-2 bg-[#0b1410] hover:bg-gray-900 border border-green-800 text-green-400 px-6 py-3 rounded-xl font-medium transition-colors shadow-[0_0_15px_rgba(22,163,74,0.15)] hover:shadow-[0_0_20px_rgba(22,163,74,0.3)] group"
-              >
-                Ver Diário da Nação
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-          )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

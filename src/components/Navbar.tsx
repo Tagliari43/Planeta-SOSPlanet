@@ -1,9 +1,10 @@
-import { Menu, X, Moon, Sun, Wallet, ShieldCheck, Globe, Volume2, VolumeX, AudioLines, Flower2, Sparkles, Bell, Wind, Vote, Sprout, Droplets, Palette } from 'lucide-react';
+import { Menu, X, Moon, Sun, Wallet, ShieldCheck, Globe, Volume2, VolumeX, AudioLines, Flower2, Sparkles, Bell, Wind, Vote, Sprout, Droplets, Palette, Home, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import { Logo } from './Logo';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from './ThemeProvider';
 import { cn } from '../lib/utils';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavProps {
   onOpenModal?: () => void;
@@ -33,6 +34,9 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
   const [currentLang, setCurrentLang] = useState('PT');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+
+  const isHomePage = location.pathname === '/';
 
   const handleLangSelect = (code: string) => {
     setCurrentLang(code);
@@ -50,13 +54,15 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-[#0b1410]/95 dark:backdrop-blur-md border-b border-gray-100 dark:border-green-900/30 transition-colors">
       <div className="px-6 py-4 flex items-center justify-between xl:mx-auto xl:max-w-7xl">
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => showDashboard && onToggleDashboard()}>
-          <Logo size="md" />
-          <span className="text-xl font-bold text-green-900 dark:text-green-400 tracking-tight transition-colors hidden sm:block">Planeta SOSPlanet</span>
+          <Link to="/" className="flex items-center gap-3">
+            <Logo size="md" />
+            <span className="text-xl font-bold text-green-900 dark:text-green-400 tracking-tight transition-colors hidden sm:block">Planeta SOSPlanet</span>
+          </Link>
         </div>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-6">
-          {!showDashboard && (
+          {!showDashboard && isHomePage && (
             <>
               <a href="#sobre" className="text-sm font-medium text-gray-600 dark:text-green-400/80 hover:text-green-700 dark:hover:text-green-300 transition-colors">Sobre</a>
               <a href="#missao" className="text-sm font-medium text-gray-600 dark:text-green-400/80 hover:text-green-700 dark:hover:text-green-300 transition-colors">Nossa Missão</a>
@@ -64,6 +70,10 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
               <a href="#projetos" className="text-sm font-medium text-gray-600 dark:text-green-400/80 hover:text-green-700 dark:hover:text-green-300 transition-colors">Projetos</a>
             </>
           )}
+          
+          <Link to="/diario" className="text-sm font-medium text-gray-600 dark:text-green-400/80 hover:text-green-700 dark:hover:text-green-300 transition-colors flex items-center gap-1">
+             <BookOpen className="w-3.5 h-3.5" /> Diário
+          </Link>
 
           {/* Lang Selector */}
           <div className="relative">
@@ -337,7 +347,7 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
             className="lg:hidden bg-white dark:bg-[#0b1410] border-t border-gray-100 dark:border-green-900/30 overflow-hidden"
           >
             <div className="flex flex-col px-6 py-4 gap-4">
-              {!showDashboard && (
+              {!showDashboard && isHomePage && (
                 <>
                   <a href="#sobre" onClick={() => setIsMobileMenuOpen(false)} className="text-base font-medium text-gray-800 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 py-2 border-b border-gray-50 dark:border-green-900/20">Sobre</a>
                   <a href="#missao" onClick={() => setIsMobileMenuOpen(false)} className="text-base font-medium text-gray-800 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 py-2 border-b border-gray-50 dark:border-green-900/20">Nossa Missão</a>
@@ -345,6 +355,9 @@ export function Navbar({ onOpenModal, walletAddress, onOpenWalletModal, onToggle
                   <a href="#projetos" onClick={() => setIsMobileMenuOpen(false)} className="text-base font-medium text-gray-800 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 py-2 border-b border-gray-50 dark:border-green-900/20">Projetos</a>
                 </>
               )}
+              <Link to="/diario" onClick={() => setIsMobileMenuOpen(false)} className="text-base font-medium text-gray-800 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 py-2 border-b border-gray-50 dark:border-green-900/20 flex items-center gap-2">
+                 <BookOpen className="w-4 h-4" /> Diário
+              </Link>
               
               <div className="flex gap-2 mb-2">
                 {languages.map((l) => (
