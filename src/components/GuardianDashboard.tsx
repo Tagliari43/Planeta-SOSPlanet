@@ -6,6 +6,7 @@ import { cn } from '../lib/utils';
 import { GaiaFloatChat } from './GaiaFloatChat';
 import { EmergencyBeacon } from './EmergencyBeacon';
 import { GuardianJourney } from './GuardianJourney';
+import { MercadoRegen } from './MercadoRegen';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -81,7 +82,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada'>('bazar');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada'>('mercado');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -128,12 +129,6 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
   const sosAmount = (Number(algoAmount) || 0) * 1500;
   const [isSwapping, setIsSwapping] = useState(false);
   const [swapSuccessEffect, setSwapSuccessEffect] = useState(false);
-  const [incineratingCard, setIncineratingCard] = useState<string | null>(null);
-
-  const handleIncinerate = (id: string) => {
-    setIncineratingCard(id);
-    setTimeout(() => setIncineratingCard(null), 2500);
-  };
 
   const handleSwap = () => {
     if (!algoAmount) return;
@@ -406,15 +401,15 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
         {/* Navigation Tabs - PORTAL CONECTADO AO PLANETA */}
         <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
           <button 
-            onClick={() => setActiveTab('bazar')}
+            onClick={() => setActiveTab('mercado')}
             className={cn(
                "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
-               activeTab === 'bazar' 
+               activeTab === 'mercado' 
                  ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
                  : "bg-[#0b1410] text-gray-400 border border-green-900/40 hover:bg-green-900/20"
             )}
           >
-            <Sparkles className="w-4 h-4" /> O Bazar
+            <Sparkles className="w-4 h-4" /> Mercado Regen
           </button>
           <button 
             onClick={() => setActiveTab('altar')}
@@ -1776,117 +1771,8 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             </motion.div>
           )}
 
-          {activeTab === 'bazar' && (
-            <motion.div
-              key="bazar"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-6"
-            >
-              <div className="bg-white/80 dark:bg-[#111f18]/60 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-green-900/30 relative overflow-hidden">
-                <div className="flex items-center gap-3 mb-10 relative z-10">
-                   <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-inner">
-                     <Sparkles className="w-6 h-6" />
-                   </div>
-                   <div>
-                     <h3 className="text-2xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight">O Bazar Simbiótico</h3>
-                     <p className="text-sm text-gray-500 dark:text-emerald-100/60 mt-1">Mercado de Regeneração Real. Converta sua energia em impacto físico estrutural.</p>
-                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-                   {[
-                     { id: 'animal', title: 'Apadrinhamento de Animal Silvestre', desc: 'Garanta mantimentos e cuidados veterinários para fauna resgatada.', img: 'https://images.unsplash.com/photo-1564750058862-23c8e5454b03?auto=format&fit=crop&q=80&w=400', cost: '5,000 SOS', tag: 'Certificado On-Chain' },
-                     { id: 'nft', title: 'Arte Nativa NFT: Espírito da Onça', desc: 'Arte digital exclusiva forjada por comunidades ribeirinhas. Desbloqueia status Ancião.', img: 'https://images.unsplash.com/photo-1621451537084-482c73073e0f?auto=format&fit=crop&q=80&w=400', cost: '12,000 SOS', tag: 'Arte Nativa' },
-                     { id: 'seeds', title: 'Kit de Sementes Ancestrais', desc: 'Cesta enviada para sua casa. Plante na sua localidade e expanda a floresta.', img: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=400', cost: '8,000 SOS', tag: 'Produto Sustentável' }
-                   ].map((item) => (
-                      <div key={item.id} className="relative group rounded-3xl overflow-hidden bg-[#0A100D] border border-emerald-900/30 hover:border-emerald-500/50 transition-all duration-500">
-                         {/* Card Image */}
-                         <div className="relative h-48 w-full overflow-hidden">
-                           <div className="absolute inset-0 bg-gradient-to-t from-[#0A100D] via-transparent to-transparent z-10" />
-                           <img src={item.img} alt={item.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-                           <div className="absolute top-4 right-4 z-20 bg-emerald-900/80 backdrop-blur-md text-emerald-300 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/30">
-                             {item.tag}
-                           </div>
-                         </div>
-                         
-                         <div className="p-6 relative z-20">
-                           <h4 className="text-lg font-bold text-emerald-50 tracking-tight leading-tight mb-2">{item.title}</h4>
-                           <p className="text-sm text-emerald-100/60 mb-6 line-clamp-2">{item.desc}</p>
-                           
-                           <div className="flex items-center justify-between">
-                             <div className="flex flex-col">
-                               <span className="text-[10px] text-emerald-500/80 uppercase font-bold tracking-widest">Custo de Ignição</span>
-                               <span className="text-emerald-400 font-mono font-bold">{item.cost}</span>
-                             </div>
-                             
-                             <button
-                               onClick={(e) => {
-                                 handleIncinerate(item.id);
-                                 const btn = e.currentTarget;
-                                 for(let i=0; i<30; i++) {
-                                    const p = document.createElement('div');
-                                    p.className = `fixed w-2 h-2 rounded-full pointer-events-none z-50 ${Math.random() > 0.5 ? 'bg-amber-400' : 'bg-emerald-400'}`;
-                                    const rect = btn.getBoundingClientRect();
-                                    p.style.left = `${rect.left + rect.width / 2}px`;
-                                    p.style.top = `${rect.top + rect.height / 2}px`;
-                                    p.style.boxShadow = '0 0 10px currentColor';
-                                    document.body.appendChild(p);
-                                    const angle = Math.random() * Math.PI * 2;
-                                    const velocity = 30 + Math.random() * 80;
-                                    const tx = Math.cos(angle) * velocity;
-                                    const ty = Math.sin(angle) * velocity - 40;
-                                    p.animate([
-                                       { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-                                       { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
-                                    ], { duration: 600 + Math.random() * 400, easing: 'ease-out' }).onfinish = () => p.remove();
-                                 }
-                               }}
-                               disabled={incineratingCard === item.id}
-                               className="relative bg-emerald-950 hover:bg-emerald-800 border border-emerald-600/40 text-emerald-300 font-bold px-4 py-2 rounded-xl transition-all overflow-hidden"
-                             >
-                               {incineratingCard === item.id ? (
-                                  <span className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-amber-400 animate-spin" /> Forjando...</span>
-                               ) : (
-                                  <span className="flex items-center gap-2 relative z-10"><Sparkles className="w-4 h-4" /> Forjar Troca</span>
-                               )}
-                               
-                               {/* Particle Magic when incinerating */}
-                               <AnimatePresence>
-                                  {incineratingCard === item.id && (
-                                     <motion.div 
-                                       initial={{ opacity: 1 }}
-                                       exit={{ opacity: 0 }}
-                                       className="absolute inset-0 pointer-events-none"
-                                     >
-                                        {[...Array(6)].map((_, i) => (
-                                          <motion.div
-                                            key={i}
-                                            className="absolute w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"
-                                            initial={{ top: '50%', left: '50%', opacity: 1, scale: 1 }}
-                                            animate={{ 
-                                              top: `${-50 - Math.random() * 50}%`, 
-                                              left: `${10 + Math.random() * 80}%`,
-                                              opacity: 0,
-                                              scale: 0
-                                            }}
-                                            transition={{ duration: 0.8 + Math.random() * 0.5, ease: "easeOut" }}
-                                          />
-                                        ))}
-                                        <div className="absolute inset-0 bg-emerald-400/20 animate-pulse mix-blend-overlay" />
-                                     </motion.div>
-                                  )}
-                               </AnimatePresence>
-                             </button>
-                           </div>
-                         </div>
-                      </div>
-                   ))}
-                </div>
-              </div>
-            </motion.div>
+          {activeTab === 'mercado' && (
+             <MercadoRegen />
           )}
 
           {activeTab === 'ponte' && (
