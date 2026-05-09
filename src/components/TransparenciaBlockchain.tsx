@@ -3,6 +3,8 @@ import { ShieldCheck, Activity, Link as LinkIcon, Database, ArrowUpRight, ArrowD
 import { cn } from '../lib/utils';
 import { useState, useEffect } from 'react';
 
+import { supabase } from '../lib/supabase';
+
 interface Transaction {
   id: string;
   type: 'in' | 'out';
@@ -10,14 +12,18 @@ interface Transaction {
   date: string;
   description: string;
   txId: string;
+  created_at?: string;
 }
 
 export function TransparenciaBlockchain() {
   const [copied, setCopied] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  
   // Fake Algorand address for display
   const daoAddress = "SOSX...9A2Z";
   
-  const transactions: Transaction[] = [
+  const fallbackTransactions: Transaction[] = [
     {
       id: "tx1",
       type: "in",
@@ -43,6 +49,52 @@ export function TransparenciaBlockchain() {
       txId: "R9TY...V1QS"
     }
   ];
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        if (!supabase) return;
+        const { data, error } = await supabase
+          .from('treasury_transactions')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error("Erro ao buscar treasury_transactions:", error);
+          setTransactions(fallbackTransactions);
+        } else if (data && data.length > 0) {
+          const formattedData = data.map((item) => ({
+            id: item.id,
+            type: item.type as 'in' | 'out',
+            amount: item.amount,
+            date: new Date(item.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }),
+            description: item.description,
+            txId: item.tx_id || "PEND...ING"
+          }));
+          setTransactions(formattedData);
+        } else {
+          setTransactions(fallbackTransactions);
+        }
+      } catch (err) {
+        console.error("Supabase fail:", err);
+        setTransactions(fallbackTransactions);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+
+    if (supabase) {
+      const sub = supabase
+        .channel('treasury_transactions_updates')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'treasury_transactions' }, payload => {
+          fetchTransactions();
+        })
+        .subscribe();
+      return () => { sub.unsubscribe(); };
+    }
+  }, []);
 
   const handleCopy = () => {
     navigator.clipboard.writeText("SOSXQPO2Z3VNY3C5N7TWWFGHJ2FPT23XQRWZKUBB45M3R3A2ZW9A2Z");
