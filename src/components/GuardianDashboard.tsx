@@ -5,6 +5,7 @@ import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip, CartesianGrid, Pi
 import { cn } from '../lib/utils';
 import { GaiaFloatChat } from './GaiaFloatChat';
 import { EmergencyBeacon } from './EmergencyBeacon';
+import { GuardianJourney } from './GuardianJourney';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -80,7 +81,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol'>('bazar');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada'>('bazar');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -469,6 +470,17 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <ShieldAlert className="w-4 h-4" /> O Farol
+          </button>
+          <button 
+            onClick={() => setActiveTab('jornada')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'jornada' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-green-900/40 hover:bg-green-900/20"
+            )}
+          >
+            <CheckCircle2 className="w-4 h-4" /> Jornada
           </button>
         </div>
 
@@ -2531,6 +2543,10 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         {activeTab === 'farol' && (
            <EmergencyBeacon />
+        )}
+
+        {activeTab === 'jornada' && (
+           <GuardianJourney />
         )}
 
         {/* A Voz de Gaia (Orquestrador) */}
