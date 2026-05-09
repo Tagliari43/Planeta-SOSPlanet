@@ -20,6 +20,7 @@ import { Pillars } from './components/Pillars';
 import { TokenSection } from './components/TokenSection';
 import { Projects } from './components/Projects';
 import { TransparenciaBlockchain } from './components/TransparenciaBlockchain';
+import { DaoGovernance } from './components/DaoGovernance';
 import { Roadmap } from './components/Roadmap';
 import { FAQ } from './components/FAQ';
 import { VigiliaDiary } from './components/VigiliaDiary';
@@ -114,6 +115,7 @@ export default function App() {
       <TokenSection onOpenModal={handleOpenModal} />
       <Projects />
       <TransparenciaBlockchain />
+      <DaoGovernance />
       <VigiliaDiary />
       <Roadmap />
       <FAQ />

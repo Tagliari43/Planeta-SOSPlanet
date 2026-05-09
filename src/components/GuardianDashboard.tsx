@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trees, GraduationCap, Coins, ShieldCheck, Shield, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X } from 'lucide-react';
+import { Trees, GraduationCap, Coins, ShieldCheck, Shield, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X, ShieldAlert } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { cn } from '../lib/utils';
+import { GaiaFloatChat } from './GaiaFloatChat';
+import { EmergencyBeacon } from './EmergencyBeacon';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -76,7 +78,9 @@ const daoProposals = [
 ];
 
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque'>('bazar');
+  const guardianName = "Eder Tagliari";
+  const currentRank = "Guardião Primordial";
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'bazar' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol'>('bazar');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -106,18 +110,6 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
   const [fireflyIdCounter, setFireflyIdCounter] = useState(0);
 
   const [gaiaVoiceOpen, setGaiaVoiceOpen] = useState(false);
-  const [gaiaVoiceStatus, setGaiaVoiceStatus] = useState<'idle' | 'thinking' | 'answered'>('idle');
-  const [gaiaAnswer, setGaiaAnswer] = useState('');
-
-  const handleGaiaAsk = (questionId: string) => {
-    setGaiaVoiceStatus('thinking');
-    setTimeout(() => {
-       if (questionId === 'q1') setGaiaAnswer('A seiva pulsa forte hoje. Nossa tesouraria está vibrante e 12 projetos estão germinando no ecossistema global.');
-       if (questionId === 'q2') setGaiaAnswer('Para evoluir sua semente, doe liquidez às missões de reflorestamento e vote ativamente nas propostas do Conselho de Guardiões.');
-       if (questionId === 'q3') setGaiaAnswer('O vento diz que uma nova aliança entre os elfos do Ethereum e os druidas da Polygon está se formando...');
-       setGaiaVoiceStatus('answered');
-    }, 2500);
-  };
 
   const handleSendFirefly = (e: React.FormEvent) => {
     e.preventDefault();
@@ -455,6 +447,28 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <Network className="w-4 h-4" /> Constelações
+          </button>
+          <button 
+            onClick={() => setActiveTab('propagador')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'propagador' 
+                 ? "bg-green-600 text-white shadow-md shadow-green-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-green-900/40 hover:bg-green-900/20"
+            )}
+          >
+            <Share2 className="w-4 h-4" /> Propagador
+          </button>
+          <button 
+            onClick={() => setActiveTab('farol')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'farol' 
+                 ? "bg-red-600 text-white shadow-md shadow-red-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-red-900/40 hover:bg-red-900/20"
+            )}
+          >
+            <ShieldAlert className="w-4 h-4" /> O Farol
           </button>
         </div>
 
@@ -2395,82 +2409,132 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         </AnimatePresence>
 
-        {/* A Voz de Gaia (Orquestrador) */}
-        <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-50 flex flex-col items-end">
-           <AnimatePresence>
-              {gaiaVoiceOpen && (
-                 <motion.div 
-                   initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                   exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                   className="mb-4 w-80 md:w-96 bg-[#0b1410] border border-emerald-900/50 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl"
-                 >
-                    <div className="p-4 bg-emerald-900/20 border-b border-emerald-900/30 flex items-center justify-between">
-                       <h4 className="text-emerald-50 font-bold flex items-center gap-2">
-                         <Sparkles className="w-4 h-4 text-emerald-400" /> A Voz de Gaia
-                       </h4>
-                       <button onClick={() => { setGaiaVoiceOpen(false); setGaiaVoiceStatus('idle'); }} className="text-emerald-500 hover:text-emerald-300">
-                         <X className="w-5 h-5" />
-                       </button>
-                    </div>
-                    <div className="p-5 min-h-[150px] flex flex-col justify-end">
-                       {gaiaVoiceStatus === 'idle' && (
-                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
-                             <p className="text-emerald-100/80 text-sm mb-4">Sinto sua presença, Guardião. O que a floresta deve sussurrar para você?</p>
-                             {[
-                               { id: 'q1', text: 'Qual a saúde da rede?' },
-                               { id: 'q2', text: 'Como evoluir minha semente?' },
-                               { id: 'q3', text: 'Fofocas da Floresta' }
-                             ].map(q => (
-                               <button 
-                                 key={q.id}
-                                 onClick={() => handleGaiaAsk(q.id)}
-                                 className="w-full text-left px-4 py-2 rounded-xl bg-emerald-900/30 hover:bg-emerald-800/50 text-emerald-300 text-sm border border-emerald-500/20 transition-all font-medium"
-                               >
-                                 {q.text}
-                               </button>
-                             ))}
-                          </motion.div>
-                       )}
-
-                       {gaiaVoiceStatus === 'thinking' && (
-                          <div className="flex flex-col items-center justify-center py-6">
-                             <motion.div 
-                               animate={{ rotate: 360, scale: [1, 1.2, 1] }} 
-                               transition={{ duration: 2, repeat: Infinity }}
-                               className="w-8 h-8 rounded-full border-2 border-emerald-500 border-t-transparent mb-4"
-                             />
-                             <p className="text-emerald-400 text-xs font-mono animate-pulse">visualizando as raízes...</p>
-                          </div>
-                       )}
-
-                       {gaiaVoiceStatus === 'answered' && (
-                          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                             <p className="text-emerald-50 text-sm leading-relaxed">{gaiaAnswer}</p>
-                             <button 
-                               onClick={() => setGaiaVoiceStatus('idle')}
-                               className="text-emerald-500 text-xs hover:text-emerald-300 underline underline-offset-4"
-                             >
-                               Perguntar outra coisa
-                             </button>
-                          </motion.div>
-                       )}
-                    </div>
-                 </motion.div>
-              )}
-           </AnimatePresence>
-
-           <button 
-             onClick={() => setGaiaVoiceOpen(!gaiaVoiceOpen)}
-             className={cn(
-               "w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all relative overflow-hidden group",
-               gaiaVoiceOpen ? "bg-emerald-600" : "bg-[#0b1410] border border-emerald-500/50 hover:bg-emerald-950"
-             )}
+        {activeTab === 'propagador' && (
+           <motion.div 
+             key="propagador"
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             exit={{ opacity: 0, y: -20 }}
+             transition={{ duration: 0.3 }}
+             className="w-full relative z-20"
            >
-              <div className="absolute inset-0 bg-emerald-400/20 rounded-full animate-ping opacity-0 group-hover:opacity-100" />
-              <Wind className={cn("w-6 h-6", gaiaVoiceOpen ? "text-emerald-50" : "text-emerald-400")} />
-           </button>
-        </div>
+              <div className="bg-white/80 dark:bg-[#080d0a]/80 backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-emerald-900/30 overflow-hidden relative">
+                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none" />
+                 
+                 <div className="flex flex-col mb-10 relative z-10 text-center">
+                    <h3 className="text-3xl font-bold text-gray-900 dark:text-emerald-50 tracking-tight flex items-center justify-center gap-3">
+                      <Share2 className="w-8 h-8 text-emerald-400" /> Propagador de Consciência
+                    </h3>
+                    <p className="text-gray-500 dark:text-emerald-100/60 mt-2">Gere seu Eco-Card único, comprove seu impacto on-chain e traga novos Guardiões para a nação SOS.</p>
+                 </div>
+
+                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div className="space-y-6 relative z-10">
+                       <div className="bg-emerald-900/20 border border-emerald-900/40 p-6 rounded-2xl relative overflow-hidden group">
+                          <div className="absolute top-0 right-0 p-4 opacity-10 text-emerald-500 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700">
+                             <Fingerprint className="w-24 h-24" />
+                          </div>
+                          <h4 className="text-xl font-bold text-emerald-50 mb-2 flex items-center gap-2">
+                            A Sua Assinatura Digital
+                          </h4>
+                          <p className="text-sm text-emerald-100/70 mb-6">Ao Mintar SOS e realizar ações climáticas de reflorestamento, sua identidade gera um selo verde verificável pela Algorand.</p>
+                          
+                          <button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all">
+                             <RefreshCcw className="w-5 h-5" /> Gerar Meu Eco-Card
+                          </button>
+                       </div>
+
+                       <div className="bg-black/30 border border-gray-800 p-6 rounded-2xl relative z-10">
+                         <h4 className="font-bold text-gray-300 mb-4 text-sm uppercase tracking-widest">Ações para Compartilhar</h4>
+                         <div className="space-y-3">
+                            <div className="bg-gray-900/50 hover:bg-gray-800 p-4 rounded-xl border border-gray-800 cursor-pointer transition-colors flex items-center justify-between">
+                               <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-full bg-emerald-900/40 border border-emerald-800 flex items-center justify-center text-emerald-400">
+                                     <Vote className="w-5 h-5" />
+                                  </div>
+                                  <div>
+                                     <h5 className="font-bold text-gray-200">Última Votação</h5>
+                                     <p className="text-xs text-gray-500">Expansão da Amazônia</p>
+                                  </div>
+                               </div>
+                               <Share2 className="w-5 h-5 text-gray-500" />
+                            </div>
+
+                            <div className="bg-gray-900/50 hover:bg-gray-800 p-4 rounded-xl border border-gray-800 cursor-pointer transition-colors flex items-center justify-between">
+                               <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-full bg-blue-900/40 border border-blue-800 flex items-center justify-center text-blue-400">
+                                     <Coins className="w-5 h-5" />
+                                  </div>
+                                  <div>
+                                     <h5 className="font-bold text-gray-200">Aporte de Tesouraria</h5>
+                                     <p className="text-xs text-gray-500">+1.500 SOS Mintados</p>
+                                  </div>
+                               </div>
+                               <Share2 className="w-5 h-5 text-gray-500" />
+                            </div>
+                         </div>
+                       </div>
+                    </div>
+
+                    {/* Eco-Card Preview generator */}
+                    <div className="flex items-center justify-center relative py-6">
+                       <div className="absolute inset-0 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+                       
+                       <div className="w-full max-w-sm aspect-[4/5] bg-gradient-to-br from-[#0f1d17] to-[#040806] rounded-3xl border border-emerald-500/30 shadow-2xl p-6 relative overflow-hidden flex flex-col justify-between group">
+                          {/* Inner glowing elements */}
+                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-[#0b1410]/0 to-[#0b1410]/0 pointer-events-none"></div>
+
+                          {/* Visual Logo / ID */}
+                          <div className="relative z-10 flex justify-between items-start">
+                             <div>
+                                <h3 className="font-black text-2xl tracking-tighter text-white">SOSPlanet</h3>
+                                <p className="text-[10px] text-emerald-400 font-mono tracking-widest mt-1 uppercase">Guardião Oficial</p>
+                             </div>
+                             <div className="w-12 h-12 bg-emerald-900/40 rounded-full border border-emerald-500/50 flex items-center justify-center text-emerald-400">
+                               <MapPin className="w-6 h-6" />
+                             </div>
+                          </div>
+
+                          {/* User Data */}
+                          <div className="relative z-10 my-auto text-center space-y-4">
+                             <div className="w-24 h-24 mx-auto bg-emerald-950 border-2 border-emerald-500/30 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                               <Crown className="w-10 h-10 text-emerald-400" />
+                             </div>
+                             <div>
+                               <h2 className="text-xl font-bold text-emerald-50 font-mono">{guardianName}</h2>
+                               <p className="text-gray-400 text-xs tracking-widest uppercase mt-1">{currentRank}</p>
+                             </div>
+                             
+                             <div className="grid grid-cols-2 gap-2 mt-4 text-left">
+                                <div className="bg-black/40 border border-gray-800 p-3 rounded-xl backdrop-blur-sm">
+                                   <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">O2 Gerado</p>
+                                   <p className="text-emerald-400 font-bold font-mono">1.240 <span className="text-xs">kg</span></p>
+                                </div>
+                                <div className="bg-black/40 border border-gray-800 p-3 rounded-xl backdrop-blur-sm">
+                                   <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Árvores</p>
+                                   <p className="text-white font-bold font-mono">15 <span className="text-xs">seed</span></p>
+                                </div>
+                             </div>
+                          </div>
+
+                          {/* Signature / Web3 Proof */}
+                          <div className="relative z-10 pt-4 border-t border-emerald-900/30 flex justify-between items-center text-[10px] font-mono text-gray-500">
+                             <span>Proof-of-Regeneration</span>
+                             <span className="text-emerald-500/50">Tx: 0x5a...8f9c</span>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </motion.div>
+        )}
+
+        {activeTab === 'farol' && (
+           <EmergencyBeacon />
+        )}
+
+        {/* A Voz de Gaia (Orquestrador) */}
+        <GaiaFloatChat isOpen={gaiaVoiceOpen} setIsOpen={setGaiaVoiceOpen} />
 
         {/* Fireflies (O Coro da Floresta) */}
         <AnimatePresence>
