@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trees, GraduationCap, Coins, ShieldCheck, Shield, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X, ShieldAlert } from 'lucide-react';
+import { Trees, GraduationCap, Coins, ShieldCheck, Shield, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X, ShieldAlert, BookOpen } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { cn } from '../lib/utils';
 import { GaiaFloatChat } from './GaiaFloatChat';
@@ -8,6 +8,7 @@ import { EmergencyBeacon } from './EmergencyBeacon';
 import { GuardianJourney } from './GuardianJourney';
 import { MercadoRegen } from './MercadoRegen';
 import { PulsoVital } from './PulsoVital';
+import { DiarioTesouro } from './DiarioTesouro';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -83,7 +84,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso'>('pulso');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario'>('diario');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -488,6 +489,17 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <Activity className="w-4 h-4" /> Pulso Vital
+          </button>
+          <button 
+            onClick={() => setActiveTab('diario')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'diario' 
+                 ? "bg-amber-600 text-white shadow-md shadow-amber-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-amber-900/40 hover:bg-amber-900/20"
+            )}
+          >
+            <BookOpen className="w-4 h-4" /> Diário e Tesouro
           </button>
         </div>
 
@@ -2449,6 +2461,10 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         {activeTab === 'pulso' && (
            <PulsoVital />
+        )}
+
+        {activeTab === 'diario' && (
+           <DiarioTesouro />
         )}
 
         {/* A Voz de Gaia (Orquestrador) */}
