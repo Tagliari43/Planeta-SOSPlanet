@@ -7,6 +7,7 @@ import { GaiaFloatChat } from './GaiaFloatChat';
 import { EmergencyBeacon } from './EmergencyBeacon';
 import { GuardianJourney } from './GuardianJourney';
 import { MercadoRegen } from './MercadoRegen';
+import { PulsoVital } from './PulsoVital';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -82,7 +83,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada'>('mercado');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso'>('pulso');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -476,6 +477,17 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <CheckCircle2 className="w-4 h-4" /> Jornada
+          </button>
+          <button 
+            onClick={() => setActiveTab('pulso')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'pulso' 
+                 ? "bg-blue-600 text-white shadow-md shadow-blue-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-blue-900/40 hover:bg-blue-900/20"
+            )}
+          >
+            <Activity className="w-4 h-4" /> Pulso Vital
           </button>
         </div>
 
@@ -2433,6 +2445,10 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         {activeTab === 'jornada' && (
            <GuardianJourney />
+        )}
+
+        {activeTab === 'pulso' && (
+           <PulsoVital />
         )}
 
         {/* A Voz de Gaia (Orquestrador) */}
