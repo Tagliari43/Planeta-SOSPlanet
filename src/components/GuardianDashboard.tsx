@@ -17,6 +17,7 @@ import { EcoQuestBoard } from './EcoQuestBoard';
 import { FrequenciaGuardia } from './FrequenciaGuardia';
 import { KnowledgeTree } from './KnowledgeTree';
 import { GuildHall } from './GuildHall';
+import { CicloDaChuva } from './CicloDaChuva';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -92,7 +93,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario' | 'crepusculo' | 'conselho' | 'atlas' | 'passaporte' | 'chamados' | 'frequencia' | 'academia' | 'guildas'>('guildas');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario' | 'crepusculo' | 'conselho' | 'atlas' | 'passaporte' | 'chamados' | 'frequencia' | 'academia' | 'guildas' | 'chuva'>('chuva');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -574,6 +575,17 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <GraduationCap className="w-4 h-4" /> Academia Regen
+          </button>
+          <button 
+            onClick={() => setActiveTab('chuva')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'chuva' 
+                 ? "bg-cyan-600 text-white shadow-md shadow-cyan-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-cyan-900/40 hover:bg-cyan-900/20"
+            )}
+          >
+            <CloudRain className="w-4 h-4" /> Ciclo da Chuva
           </button>
           <button 
             onClick={() => setActiveTab('guildas')}
@@ -2593,6 +2605,10 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         {activeTab === 'guildas' && (
            <GuildHall />
+        )}
+
+        {activeTab === 'chuva' && (
+           <CicloDaChuva />
         )}
 
         {/* A Voz de Gaia (Orquestrador) */}

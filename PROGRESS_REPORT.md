@@ -61,5 +61,10 @@ A Nação SOSPlanet consolida aqui, de forma transparente, as fases evolutivas d
 - **Status:** Concluído ✔️
 - **Descrição:** Lançamento do Salão das Alianças (GuildHall). O sistema permite a afiliação a três Estandartes de Bioma principais (Amazônia, Cerrado e Mata Atlântica). Implementado o "Poço de Sinergia", uma representação gráfica na forma de um cristal/cálice onde doações on-chain (acúmulo de Eco-Streaks) preenchem fluidamente a meta de união global. Arquitetura sagrada com backgrounds estilizados preservando o estilo UI cibernético característico da Nação.
 
+## 🌧️ Fase 21: O Ciclo da Chuva
+*Staking Vital (ReFi) e Árvore Matriz.*
+- **Status:** Concluído ✔️
+- **Descrição:** Implementação do portal de financiamento regenerativo on-chain (Staking). Construída a interface da "Árvore Matriz" em SVG holográfico com crescimento dinâmico e bioluminescência reativa ao TVL Global. Integrada a simulação do Oráculo Arion onde "Irrigar a Terra" com tokens projeta não só rendimentos financeiros (APY), mas também métricas tangíveis de áreas florestais asseguradas e créditos de carbono. Design flúido com animações aquáticas e de luz na sintaxe visual cibernética da Nação.
+
 ---
 *(Relatório Atualizado. Que o Arquiteto traga as diretrizes para as próximas Fases!)*
