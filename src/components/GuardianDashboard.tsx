@@ -16,6 +16,7 @@ import { GuardianPassport } from './GuardianPassport';
 import { EcoQuestBoard } from './EcoQuestBoard';
 import { FrequenciaGuardia } from './FrequenciaGuardia';
 import { KnowledgeTree } from './KnowledgeTree';
+import { GuildHall } from './GuildHall';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -91,7 +92,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario' | 'crepusculo' | 'conselho' | 'atlas' | 'passaporte' | 'chamados' | 'frequencia' | 'academia'>('academia');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario' | 'crepusculo' | 'conselho' | 'atlas' | 'passaporte' | 'chamados' | 'frequencia' | 'academia' | 'guildas'>('guildas');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -573,6 +574,17 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <GraduationCap className="w-4 h-4" /> Academia Regen
+          </button>
+          <button 
+            onClick={() => setActiveTab('guildas')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'guildas' 
+                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-emerald-900/40 hover:bg-emerald-900/20"
+            )}
+          >
+            <Shield className="w-4 h-4" /> Alianças (Guildas)
           </button>
           <button 
             onClick={() => setActiveTab('passaporte')}
@@ -2577,6 +2589,10 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         {activeTab === 'academia' && (
            <KnowledgeTree />
+        )}
+
+        {activeTab === 'guildas' && (
+           <GuildHall />
         )}
 
         {/* A Voz de Gaia (Orquestrador) */}

@@ -56,5 +56,10 @@ A Nação SOSPlanet consolida aqui, de forma transparente, as fases evolutivas d
 - **Status:** Concluído ✔️
 - **Descrição:** Criação da Skill Tree educacional para a jornada do Guardião. Possui mecânicas de Progressão via Árvore (Raízes, Tronco e Copa). Interfaces visuais em state-machine (Bloqueado/Desbloqueado/Despertando) com fantásticas animações de partículas que representam a fagulha do conhecimento, convertendo teorias ecológicas e de Web3 em "Fragmentos de Sabedoria" que fortalecem o Passaporte do Guardião.
 
+## 🛡️ Fase 20: A Forja das Alianças
+*Guildas Biocêntricas e Coesão.*
+- **Status:** Concluído ✔️
+- **Descrição:** Lançamento do Salão das Alianças (GuildHall). O sistema permite a afiliação a três Estandartes de Bioma principais (Amazônia, Cerrado e Mata Atlântica). Implementado o "Poço de Sinergia", uma representação gráfica na forma de um cristal/cálice onde doações on-chain (acúmulo de Eco-Streaks) preenchem fluidamente a meta de união global. Arquitetura sagrada com backgrounds estilizados preservando o estilo UI cibernético característico da Nação.
+
 ---
 *(Relatório Atualizado. Que o Arquiteto traga as diretrizes para as próximas Fases!)*
