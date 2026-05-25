@@ -51,5 +51,10 @@ A Nação SOSPlanet consolida aqui, de forma transparente, as fases evolutivas d
 - **Status:** Concluído ✔️
 - **Descrição:** Lançamento do terminal interativo de chat global (Estilo Rádio/Scanner). Implementado o sistema "Ping Geográfico (SOS P2P)" para Guardiões enviarem Pedidos de Ação nas suas regiões locais e se conectarem globalmente com a comunidade. Gráficos com simulação de ondas sonoras, design cyber-verde e pings em tempo real fortalecendo a rede neural social da Nação da Terra.
 
+## 🧠 Fase 19: A Árvore do Conhecimento
+*Academia Regen (Skill Tree).*
+- **Status:** Concluído ✔️
+- **Descrição:** Criação da Skill Tree educacional para a jornada do Guardião. Possui mecânicas de Progressão via Árvore (Raízes, Tronco e Copa). Interfaces visuais em state-machine (Bloqueado/Desbloqueado/Despertando) com fantásticas animações de partículas que representam a fagulha do conhecimento, convertendo teorias ecológicas e de Web3 em "Fragmentos de Sabedoria" que fortalecem o Passaporte do Guardião.
+
 ---
 *(Relatório Atualizado. Que o Arquiteto traga as diretrizes para as próximas Fases!)*
