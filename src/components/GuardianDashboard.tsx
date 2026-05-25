@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Trees, GraduationCap, Coins, ShieldCheck, Shield, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X, ShieldAlert, BookOpen } from 'lucide-react';
+import { Trees, GraduationCap, Coins, ShieldCheck, Shield, Activity, Leaf, Eye, Vote, Sparkles, CheckCircle2, ChevronRight, Fingerprint, Lock, Sprout, MapPin, Calendar, Atom, FileText, Image as ImageIcon, Droplets, RefreshCcw, ArrowUpDown, Wind, BellRing, Target, Medal, Award, Flame, Crown, Network, Flower, Share2, Globe, CloudRain, Sun, Moon, Link, X, ShieldAlert, BookOpen, Landmark } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { cn } from '../lib/utils';
 import { GaiaFloatChat } from './GaiaFloatChat';
@@ -9,6 +9,10 @@ import { GuardianJourney } from './GuardianJourney';
 import { MercadoRegen } from './MercadoRegen';
 import { PulsoVital } from './PulsoVital';
 import { DiarioTesouro } from './DiarioTesouro';
+import { PortalCrepusculo } from './PortalCrepusculo';
+import { ConselhoTerra } from './ConselhoTerra';
+import { AtlasRestauracao } from './AtlasRestauracao';
+import { GuardianPassport } from './GuardianPassport';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -84,7 +88,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario'>('diario');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario' | 'crepusculo' | 'conselho' | 'atlas' | 'passaporte'>('passaporte');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -500,6 +504,50 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <BookOpen className="w-4 h-4" /> Diário e Tesouro
+          </button>
+          <button 
+            onClick={() => setActiveTab('crepusculo')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'crepusculo' 
+                 ? "bg-purple-600 text-white shadow-md shadow-purple-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-purple-900/40 hover:bg-purple-900/20"
+            )}
+          >
+            <Moon className="w-4 h-4" /> Portal do Crepúsculo
+          </button>
+          <button 
+            onClick={() => setActiveTab('conselho')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'conselho' 
+                 ? "bg-yellow-600 text-white shadow-md shadow-yellow-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-yellow-900/40 hover:bg-yellow-900/20"
+            )}
+          >
+            <Landmark className="w-4 h-4" /> Conselho da Terra
+          </button>
+          <button 
+            onClick={() => setActiveTab('atlas')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'atlas' 
+                 ? "bg-cyan-600 text-white shadow-md shadow-cyan-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-cyan-900/40 hover:bg-cyan-900/20"
+            )}
+          >
+            <Globe className="w-4 h-4" /> Atlas da Restauração
+          </button>
+          <button 
+            onClick={() => setActiveTab('passaporte')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'passaporte' 
+                 ? "bg-blue-600 text-white shadow-md shadow-blue-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-blue-900/40 hover:bg-blue-900/20"
+            )}
+          >
+            <Shield className="w-4 h-4" /> Passaporte Holográfico
           </button>
         </div>
 
@@ -2465,6 +2513,22 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         {activeTab === 'diario' && (
            <DiarioTesouro />
+        )}
+
+        {activeTab === 'crepusculo' && (
+           <PortalCrepusculo />
+        )}
+
+        {activeTab === 'conselho' && (
+           <ConselhoTerra />
+        )}
+
+        {activeTab === 'atlas' && (
+           <AtlasRestauracao />
+        )}
+
+        {activeTab === 'passaporte' && (
+           <GuardianPassport />
         )}
 
         {/* A Voz de Gaia (Orquestrador) */}

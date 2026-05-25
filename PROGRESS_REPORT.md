@@ -21,5 +21,25 @@ A Nação SOSPlanet consolida aqui, de forma transparente, as fases evolutivas d
 - **Status:** Concluído ✔️
 - **Descrição:** Lançada a Aba de Tesouraria On-Chain, provando alocações na meta global (50.000 SOS). Incorporado a Linha do Tempo Viva (Ações Guardadas Imutavelmente) e uma vitrine declarada preparando os endpoints da futura API para transparência em todo ecossistema aberto (NGOs, Governos e a Comunidade Web3).
 
+## 🌌 Fase 13: O Portal do Crepúsculo e Eco-Streaks
+*Onde a emoção humana codifica a malha regenerativa.*
+- **Status:** Concluído ✔️
+- **Descrição:** Criação do Batimento Emocional (HeartPulse), permitindo que guardiões registrem suas intenções. Implementação do sistema de Eco-Streaks, transformando constância em árvores radiantes. Adição do "Eco de Vesper", a IA da Empatia que responde com base nos streaks.
+
+## ⚖️ Fase 14: O Conselho da Terra (Governança DAO)
+*A voz da Nação Eco-Digital.*
+- **Status:** Concluído ✔️
+- **Descrição:** Lançado O Grande Salão. Implementação de propostas ecológicas com barras de progresso de votos. Criação do Poder de Voto Sinergético, onde tokens em carteira são multiplicados pela constância (Eco-Streaks). Animações de votos vibrantes que confirmam o poder da voz criptografada na regeneração planetária.
+
+## 🌍 Fase 15: O Atlas da Restauração e Genesis NFTs
+*A malha geolocalizada da nossa Nação.*
+- **Status:** Concluído ✔️
+- **Descrição:** Criação do Atlas da Restauração, um mapa global holográfico exibindo as "Zonas de Cura". Integração de painéis dos Oráculos (Arion e Synara) para visualização preditiva e biológica de cada bioma. Implementação dos Genesis NFTs (Sementes Digitais) no novo formato dinâmico reagindo inteligentemente em 3 estágios visuais (Semente, Broto, Bioma) representando a Prova de Ação descentralizada.
+
+## 🛡️ Fase 16: O Passaporte Ecológico
+*Identidade Soberana.*
+- **Status:** Concluído ✔️
+- **Descrição:** Desenvolvimento do Passaporte Holográfico condensando as métricas valiosas do guardião (Eco-Streaks, Poder DAO e NFTs). Integração da "Malha de Ressonância" com o P2P Flare, um scanner visual orgânico que permite enviar Sinais de Cura vitais para a rede descentralizada.
+
 ---
 *(Relatório Atualizado. Que o Arquiteto traga as diretrizes para as próximas Fases!)*
