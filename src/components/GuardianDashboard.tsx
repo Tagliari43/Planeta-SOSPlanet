@@ -18,6 +18,7 @@ import { FrequenciaGuardia } from './FrequenciaGuardia';
 import { KnowledgeTree } from './KnowledgeTree';
 import { GuildHall } from './GuildHall';
 import { CicloDaChuva } from './CicloDaChuva';
+import { AgroforestryPlanner } from './AgroforestryPlanner';
 
 interface GuardianDashboardProps {
   walletAddress: string;
@@ -93,7 +94,7 @@ const daoProposals = [
 export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianDashboardProps) {
   const guardianName = "Eder Tagliari";
   const currentRank = "Guardião Primordial";
-  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario' | 'crepusculo' | 'conselho' | 'atlas' | 'passaporte' | 'chamados' | 'frequencia' | 'academia' | 'guildas' | 'chuva'>('chuva');
+  const [activeTab, setActiveTab] = useState<'overview' | 'eye' | 'dao' | 'viveiro' | 'mural' | 'fonte' | 'circulo' | 'codice' | 'arvore' | 'raiz' | 'mercado' | 'ponte' | 'ninho' | 'espelho' | 'trilha' | 'altar' | 'bosque' | 'propagador' | 'farol' | 'jornada' | 'pulso' | 'diario' | 'crepusculo' | 'conselho' | 'atlas' | 'passaporte' | 'chamados' | 'frequencia' | 'academia' | 'guildas' | 'chuva' | 'agro'>('agro');
   const [gaiaMood, setGaiaMood] = useState<'dew' | 'rain' | 'twilight'>('dew');
   const [votingProposal, setVotingProposal] = useState<number | null>(null);
   const [algoAmount, setAlgoAmount] = useState('');
@@ -597,6 +598,17 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
             )}
           >
             <Shield className="w-4 h-4" /> Alianças (Guildas)
+          </button>
+          <button 
+            onClick={() => setActiveTab('agro')}
+            className={cn(
+               "px-5 py-2.5 rounded-full font-medium text-sm transition-all whitespace-nowrap flex items-center gap-2",
+               activeTab === 'agro' 
+                 ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20" 
+                 : "bg-[#0b1410] text-gray-400 border border-emerald-900/40 hover:bg-emerald-900/20"
+            )}
+          >
+            <Trees className="w-4 h-4" /> Berço Verde
           </button>
           <button 
             onClick={() => setActiveTab('passaporte')}
@@ -2609,6 +2621,10 @@ export function GuardianDashboard({ walletAddress, biome = 'amazon' }: GuardianD
 
         {activeTab === 'chuva' && (
            <CicloDaChuva />
+        )}
+
+        {activeTab === 'agro' && (
+           <AgroforestryPlanner />
         )}
 
         {/* A Voz de Gaia (Orquestrador) */}
