@@ -41,5 +41,10 @@ A Nação SOSPlanet consolida aqui, de forma transparente, as fases evolutivas d
 - **Status:** Concluído ✔️
 - **Descrição:** Desenvolvimento do Passaporte Holográfico condensando as métricas valiosas do guardião (Eco-Streaks, Poder DAO e NFTs). Integração da "Malha de Ressonância" com o P2P Flare, um scanner visual orgânico que permite enviar Sinais de Cura vitais para a rede descentralizada.
 
+## ⚔️ Fase 17: Chamado da Terra (Eco-Quests)
+*O Epicentro de Missões.*
+- **Status:** Concluído ✔️
+- **Descrição:** Lançamento do portal de engajamento ativo listando as Bounties (Missões) com diferentes graus de urgência. Inclui mecânicas de "Aceitar Chamado" e "Resgatar Recompensa" (Claim) com design focado na gratificação visual e conversão (XP/SOS tokens). Completamente interligado às janelas oraculares preditivas com Synara e Arion informando as necessidades da malha central.
+
 ---
 *(Relatório Atualizado. Que o Arquiteto traga as diretrizes para as próximas Fases!)*
