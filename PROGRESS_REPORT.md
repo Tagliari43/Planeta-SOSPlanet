@@ -46,5 +46,10 @@ A Nação SOSPlanet consolida aqui, de forma transparente, as fases evolutivas d
 - **Status:** Concluído ✔️
 - **Descrição:** Lançamento do portal de engajamento ativo listando as Bounties (Missões) com diferentes graus de urgência. Inclui mecânicas de "Aceitar Chamado" e "Resgatar Recompensa" (Claim) com design focado na gratificação visual e conversão (XP/SOS tokens). Completamente interligado às janelas oraculares preditivas com Synara e Arion informando as necessidades da malha central.
 
+## 📡 Fase 18: A Frequência Guardiã
+*Central Global P2P.*
+- **Status:** Concluído ✔️
+- **Descrição:** Lançamento do terminal interativo de chat global (Estilo Rádio/Scanner). Implementado o sistema "Ping Geográfico (SOS P2P)" para Guardiões enviarem Pedidos de Ação nas suas regiões locais e se conectarem globalmente com a comunidade. Gráficos com simulação de ondas sonoras, design cyber-verde e pings em tempo real fortalecendo a rede neural social da Nação da Terra.
+
 ---
 *(Relatório Atualizado. Que o Arquiteto traga as diretrizes para as próximas Fases!)*
